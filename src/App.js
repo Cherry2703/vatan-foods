@@ -14,18 +14,16 @@ import TrackOrder from "./components/TrackOrder/TrackOrder";
 
 import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
+import NotFound from "./components/NotFound/NotFound";
 
 function App() {
-  // Check if user is logged in by looking for a token or user info in localStorage
   const isLoggedIn = !!localStorage.getItem("user"); // adjust the key name you use in localStorage
 
   return (
     <Router>
-      {/* Show Navbar only if logged in */}
       {isLoggedIn && <Navbar />}
 
       <Routes>
-        {/* Public Routes */}
         <Route
           path="/login"
           element={isLoggedIn ? <Navigate to="/dashboard" /> : <Login />}
@@ -35,7 +33,6 @@ function App() {
           element={isLoggedIn ? <Navigate to="/dashboard" /> : <Signup />}
         />
 
-        {/* Protected Routes */}
         <Route
           path="/"
           element={
@@ -102,7 +99,7 @@ function App() {
         />
 
         {/* Fallback route */}
-        <Route path="*" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} />} />
+        <Route path="*" element={<NotFound/> } />
       </Routes>
     </Router>
   );

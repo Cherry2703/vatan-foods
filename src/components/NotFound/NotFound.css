@@ -1,0 +1,122 @@
+/* Main Wrapper */
+.nf-container {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #1b1b1b, #292929);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Content Box */
+.nf-content {
+  text-align: center;
+  animation: fadeIn 1.2s ease-out forwards;
+}
+
+.nf-title {
+  font-size: 10rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 8px;
+  color: #ff4d4d;
+  animation: popIn 0.8s ease-out forwards;
+}
+
+.nf-subtitle {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  animation: slideDown 1s ease-out forwards;
+}
+
+.nf-text {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  opacity: 0.8;
+  animation: fadeIn 1.4s ease-out forwards;
+}
+
+.nf-button {
+  display: inline-block;
+  padding: 12px 25px;
+  background: #ff4d4d;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: 0.3s ease;
+  animation: fadeIn 1.6s ease-out forwards;
+}
+
+.nf-button:hover {
+  background: #ff2a2a;
+  transform: translateY(-3px);
+}
+
+/* Floating background circles */
+.nf-floating-circle {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: rgba(255, 77, 77, 0.15);
+  animation: float 6s ease-in-out infinite;
+  top: 15%;
+  right: 10%;
+}
+
+.nf-floating-circle.small {
+  width: 150px;
+  height: 150px;
+  left: 10%;
+  bottom: 20%;
+  animation-duration: 8s;
+}
+
+/* Keyframe animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideDown {
+  0% { transform: translateY(-20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-25px); }
+  100% { transform: translateY(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .nf-title {
+    font-size: 6rem;
+  }
+  .nf-subtitle {
+    font-size: 1.6rem;
+  }
+  .nf-text {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nf-title {
+    font-size: 4rem;
+  }
+  .nf-subtitle {
+    font-size: 1.4rem;
+  }
+}
