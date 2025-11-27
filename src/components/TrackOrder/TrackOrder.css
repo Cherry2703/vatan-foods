@@ -1,0 +1,104 @@
+.batch-timeline-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.batch-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.batch-input input {
+  flex: 1;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.batch-input button {
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.timeline-section {
+  margin-bottom: 40px;
+}
+
+.timeline-section h3 {
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+}
+
+.timeline-card {
+  border-left: 3px solid #007bff;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  position: relative;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.timeline-card::before {
+  content: "";
+  position: absolute;
+  left: -9px;
+  top: 15px;
+  width: 12px;
+  height: 12px;
+  background: #007bff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.timeline-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.prev-upd-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.prev,
+.updated {
+  flex: 1;
+  background: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.updated-only {
+  background: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.action.create {
+  color: green;
+}
+
+.action.update {
+  color: orange;
+}
+
+.updatedBy {
+  font-style: italic;
+  font-size: 14px;
+  margin-top: 5px;
+}

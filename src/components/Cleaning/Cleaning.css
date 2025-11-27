@@ -1,0 +1,285 @@
+/* 🌿 Main Container */
+.cleaning-container {
+  padding: 1.5rem;
+  font-family: "Inter", sans-serif;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  color: #0f172a;
+  animation: fadeIn 0.4s ease;
+}
+
+/* 🌟 Header */
+.cleaning-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.cleaning-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cleaning-header p {
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.add-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  transition: 0.25s ease;
+}
+
+.add-btn:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+}
+
+/* 🔍 Search Bar */
+.search-bar {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: 0.2s;
+}
+
+.search-bar:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  margin-left: 10px;
+  width: 100%;
+  font-size: 1rem;
+  background: transparent;
+}
+
+/* 📋 Table */
+.table-container {
+  margin-top: 1.3rem;
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.cleaning-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.cleaning-table thead {
+  background: #f1f5f9;
+}
+
+.cleaning-table th,
+.cleaning-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.cleaning-table tr:hover {
+  background: #f8fafc;
+  transition: 0.2s ease;
+}
+
+/* 🧰 Buttons */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  background: #88a4e0;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 6px 10px;
+  border: none;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.edit-btn {
+  background: #22c55e;
+  color: white;
+}
+
+.edit-btn:hover {
+  background: #8adfa9;
+  transform: scale(1.05);
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #e8b2b2;
+  transform: scale(1.05);
+}
+
+/* 🪟 Popup Overlay */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+  z-index: 1000;
+}
+
+/* 🪟 Dialog */
+.dialog {
+  background: #fff;
+  width: 95%;
+  max-width: 650px;
+  border-radius: 14px;
+  padding: 1.6rem;
+  animation: slideUp 0.35s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.dialog h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+/* 📑 Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field.full {
+  grid-column: span 2;
+}
+
+.form-field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.25s;
+  background: #fff;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* 🎬 Dialog Buttons */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.4rem;
+}
+
+.cancel-btn,
+.save-btn {
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.cancel-btn {
+  background: #e2e8f0;
+}
+
+.cancel-btn:hover {
+  background: #cbd5e1;
+}
+
+.save-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.save-btn:hover {
+  background: #1d4ed8;
+}
+
+/* 🟢 Signed Icon */
+.signed-true {
+  color: #22c55e;
+  font-size: 1.2rem;
+}
+
+/* 🌈 Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* 📱 Mobile Fixes */
+@media (max-width: 500px) {
+  .dialog {
+    padding: 1rem;
+  }
+  .cleaning-header h1 {
+    font-size: 1.4rem;
+  }
+  .form-field.full {
+    grid-column: span 1;
+  }
+}
