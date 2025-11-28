@@ -1,5 +1,4 @@
-
-/* Login.css — Glassmorphism Style */
+/* 
 .login-page-wrapper {
   position: fixed;
   inset: 0;
@@ -11,7 +10,6 @@
   overflow: hidden;
 }
 
-/* Animated floating circles */
 .login-page-wrapper::before,
 .login-page-wrapper::after {
   content: "";
@@ -37,8 +35,149 @@
 
 @keyframes float {
   0% { transform: translateY(0); }
-  50% { transform: translateY(25px); }
+  50% { transform: translateY(15px); }
   100% { transform: translateY(0); }
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 30px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 35px rgba(0, 0, 0, 0.12);
+  animation: fadeUp 0.8s ease;
+}
+
+.form-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #2b2b2b;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6px);
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.input-field:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 8px rgba(74, 144, 226, 0.4);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #4a90e2cc;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+  backdrop-filter: blur(5px);
+}
+
+.login-btn:hover {
+  background: #3c7acc;
+  transform: translateY(-2px);
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.signup-text {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.signup-link {
+  color: #225bbd;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+} */
+
+
+
+
+/* Login.css — Glassmorphism Style */
+.login-page-wrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #dbe9ff, #f3f7ff, #e2ecff);
+  padding: 20px;
+  overflow: hidden;
+}
+
+/* Animated floating circles */
+.login-page-wrapper::before,
+.login-page-wrapper::after {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: rgba(135, 203, 242, 0.35);
+  backdrop-filter: blur(10px);
+  animation: float 6s infinite ease-in-out;
+}
+
+.login-page-wrapper::before {
+  top: -60px;
+  left: -40px;
+  animation: floatLeft 6s infinite ease-in-out;
+}
+
+.login-page-wrapper::after {
+  bottom: -80px; /* move further down to avoid overlapping */
+  right: -100px; /* move further right */
+  width: 220px;  /* slightly bigger */
+  height: 220px;
+  animation: floatRight 8s infinite ease-in-out; /* different timing for variation */
+  background: rgba(163, 219, 235, 0.25); /* subtle difference */
+}
+
+@keyframes floatLeft {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(20px) translateX(10px); }
+  100% { transform: translateY(0) translateX(0); }
+}
+
+@keyframes floatRight {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(25px) translateX(-15px); }
+  100% { transform: translateY(0) translateX(0); }
 }
 
 /* Glass Card */
@@ -54,6 +193,7 @@
   animation: fadeUp 0.8s ease;
 }
 
+/* Other styles remain same */
 .form-title {
   font-size: 26px;
   font-weight: 700;
