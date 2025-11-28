@@ -74,6 +74,8 @@ export default function Cleaning() {
     return Number.isFinite(n) ? n : 0;
   };
 
+  // ---------auto calculations part ----------
+
   const handleChange = (e) => {
     const { name, value: rawValue, type, checked } = e.target;
     let value = type === "checkbox" ? checked : rawValue;
@@ -87,26 +89,30 @@ export default function Cleaning() {
       const next = { ...prev, [name]: value };
 
       // Auto-calc fields
-      if (name === "inputQuantity" || name === "outputQuantity") {
-        const inputQ = formatNumber(name === "inputQuantity" ? value : next.inputQuantity);
-        const outputQ = formatNumber(name === "outputQuantity" ? value : next.outputQuantity);
-        next.wastageQuantity = inputQ - outputQ >= 0 ? inputQ - outputQ : 0;
-        next.usedQuantity = inputQ;
-        next.remainingAfterCleaning = prev.remainingAfterCleaning; // will update on save
-      }
+      // if (name === "inputQuantity" || name === "outputQuantity") {
+      //   const inputQ = formatNumber(name === "inputQuantity" ? value : next.inputQuantity);
+      //   const outputQ = formatNumber(name === "outputQuantity" ? value : next.outputQuantity);
+      //   next.wastageQuantity = inputQ - outputQ >= 0 ? inputQ - outputQ : 0;
+      //   next.usedQuantity = inputQ;
+      //   next.remainingAfterCleaning = prev.remainingAfterCleaning; // will update on save
+      // }
 
       // If batchId selected, auto-fill item name and remaining
       if (name === "batchId") {
         const batch = incomingData.find((b) => b.batchId === value);
         if (batch) {
           next.itemName = batch.itemName;
-          next.remainingAfterCleaning = batch.totalQuantity; // current available
+          // next.remainingAfterCleaning = batch.totalQuantity; // current available
         }
       }
 
       return next;
     });
   };
+
+// -------------auto calaculations part
+
+
 
   // ---------- Add / Edit / Delete ----------
   const openAdd = () => {
@@ -364,11 +370,11 @@ const closeHistory = () => setShowHistoryFor(null);
                 </div>
                 <div className="form-field">
                   <label>Wastage Quantity</label>
-                  <input name="wastageQuantity" placeholder="Wastage Quantity" value={formData.wastageQuantity} readOnly />
+                  <input name="wastageQuantity" placeholder="Wastage Quantity" value={formData.wastageQuantity} onChange={handleChange} />
                 </div>
                 <div className="form-field">
                   <label>Used Quantity</label>
-                  <input name="usedQuantity" placeholder="Total Quantity used for cleaning" value={formData.usedQuantity} readOnly />
+                  <input name="usedQuantity" placeholder="Total Quantity used for cleaning" value={formData.usedQuantity} onChange={handleChange} />
                 </div>
                 <div className="form-field">
                   <label>Remaining Raw Material After Cleaning</label>
