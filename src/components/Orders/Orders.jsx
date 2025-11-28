@@ -674,7 +674,7 @@ export default function Orders() {
       <div className="form-grid">
         <div className="field">
           <label htmlFor="customerName">Customer Name</label>
-          <input id="customerName" name="customerName" value={formData.customerName} onChange={handleChange} required />
+          <input id="customerName" placeholder="Customer Name" name="customerName" value={formData.customerName} onChange={handleChange} required />
         </div>
 
         <div className="field">
@@ -688,27 +688,27 @@ export default function Orders() {
 
         <div className="field">
           <label htmlFor="contactPerson">Contact Person</label>
-          <input id="contactPerson" name="contactPerson" value={formData.contactPerson} onChange={handleChange} required />
+          <input id="contactPerson" placeholder="Contact Person" name="contactPerson" value={formData.contactPerson} onChange={handleChange} required />
         </div>
 
         <div className="field">
           <label htmlFor="contactNumber">Contact Number</label>
-          <input id="contactNumber" name="contactNumber" value={formData.contactNumber} onChange={handleChange} required />
+          <input id="contactNumber" placeholder="Mobile Number" name="contactNumber" value={formData.contactNumber} onChange={handleChange} required />
         </div>
 
         <div className="field">
           <label htmlFor="email">Email</label>
-          <input id="email" name="email" value={formData.email} onChange={handleChange} />
+          <input id="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
         </div>
 
         <div className="field">
           <label htmlFor="vendorName">Vendor Name</label>
-          <input id="vendorName" name="vendorName" value={formData.vendorName} onChange={handleChange} />
+          <input id="vendorName" placeholder="Vendor Name" name="vendorName" value={formData.vendorName} onChange={handleChange} />
         </div>
 
         <div className="field">
           <label htmlFor="vendorAddress">Vendor Address</label>
-          <input id="vendorAddress" name="vendorAddress" value={formData.vendorAddress} onChange={handleChange} />
+          <input id="vendorAddress" placeholder="Vendor Address" name="vendorAddress" value={formData.vendorAddress} onChange={handleChange} />
         </div>
 
         <div className="field">
@@ -727,6 +727,7 @@ export default function Orders() {
             id="poDate"
             name="poDate"
             type="date"
+            placeholder="Ordered Date"
             value={formData.poDate ? formData.poDate.split("T")[0] : ""}
             onChange={handleChange}
           />
@@ -740,12 +741,12 @@ export default function Orders() {
           <div key={idx} className="items-row">
             <div className="field small">
               <label>Item Name</label>
-              <input name="name" value={item.name} onChange={(e) => handleItemChange(idx, e)} required />
+              <input name="name" placeholder="Item Name" value={item.name} onChange={(e) => handleItemChange(idx, e)} required />
             </div>
 
             <div className="field tiny">
               <label>Qty</label>
-              <input name="quantity" type="number" value={item.quantity} onChange={(e) => handleItemChange(idx, e)} required />
+              <input name="quantity" placeholder="Quantity" type="number" value={item.quantity} onChange={(e) => handleItemChange(idx, e)} required />
             </div>
 
             <div className="field tiny">
@@ -760,7 +761,7 @@ export default function Orders() {
 
             <div className="field small">
               <label>Price/Unit</label>
-              <input name="pricePerUnit" type="number" value={item.pricePerUnit} onChange={(e) => handleItemChange(idx, e)} required />
+              <input name="pricePerUnit" placeholder="Price per unit" type="number" value={item.pricePerUnit} onChange={(e) => handleItemChange(idx, e)} required />
             </div>
 
             <div className="item-actions">
@@ -783,51 +784,53 @@ export default function Orders() {
 
           <div className="field">
             <label>Delivery Date</label>
-            <input name="deliveryDate" type="date" value={formData.deliveryDate ? formData.deliveryDate.split("T")[0] : ""} onChange={handleChange} />
-          </div>
-
-          <div className="field">
-            <label>City</label>
-            <input name="deliveryCity" value={formData.deliveryCity} onChange={handleChange} />
+            <input name="deliveryDate" placeholder="Delivery Date" type="date" value={formData.deliveryDate ? formData.deliveryDate.split("T")[0] : ""} onChange={handleChange} />
           </div>
 
           <div className="field">
             <label>State</label>
-            <select name="deliveryState" value={formData.deliveryState} onChange={handleChange}>
+            <select name="deliveryState"  value={formData.deliveryState} onChange={handleChange}>
               <option value="">Select State</option>
               {states.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
           </div>
 
           <div className="field">
+            <label>City</label>
+            <input name="deliveryCity" placeholder="Delivery City Name" value={formData.deliveryCity} onChange={handleChange} />
+          </div>
+
+          
+
+          <div className="field">
             <label>Pincode</label>
-            <input name="deliveryPincode" value={formData.deliveryPincode} onChange={handleChange} />
+            <input name="deliveryPincode" placeholder="Delivery Address Pincode" value={formData.deliveryPincode} onChange={handleChange} />
           </div>
         </div>
 
         <div className="field full">
           <label>Delivery Address</label>
-          <textarea name="deliveryAddress" rows="3" value={formData.deliveryAddress} onChange={handleChange} />
+          <textarea name="deliveryAddress" placeholder="Please enter complete delivery address" rows="3" value={formData.deliveryAddress} onChange={handleChange} />
         </div>
 
         <div className="form-grid">
           <div className="field">
             <label>Vehicle Number</label>
-            <input name="assignedVehicle" value={formData.assignedVehicle} onChange={handleChange} />
+            <input name="assignedVehicle" placeholder="Vechicle Number" value={formData.assignedVehicle} onChange={handleChange} />
           </div>
           <div className="field">
             <label>Driver Name</label>
-            <input name="driverName" value={formData.driverName} onChange={handleChange} />
+            <input name="driverName" placeholder="Driver Name" value={formData.driverName} onChange={handleChange} />
           </div>
           <div className="field">
             <label>Driver Contact</label>
-            <input name="driverContact" value={formData.driverContact} onChange={handleChange} />
+            <input name="driverContact" placeholder="Driver Mobile Number" value={formData.driverContact} onChange={handleChange} />
           </div>
         </div>
 
         <div className="field full">
           <label>Remarks</label>
-          <textarea name="remarks" rows="2" value={formData.remarks} onChange={handleChange} />
+          <textarea name="remarks" placeholder="Anything else if you want to convey about your order?" rows="2" value={formData.remarks} onChange={handleChange} />
         </div>
 
         <div className="popup-actions">

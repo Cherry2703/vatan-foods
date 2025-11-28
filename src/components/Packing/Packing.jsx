@@ -4,13 +4,15 @@ import axios from "axios";
 import "./Packing.css";
 
 const API_BASE = "https://vatan-foods-backend-final.onrender.com/api/packing";
-const BATCH_API = "https://vatan-foods-backend-final.onrender.com/api/cleaning";
-const MATERIAL_API = "https://vatan-foods-backend-final.onrender.com/api/incoming";
+const CLEANING_API = "https://vatan-foods-backend-final.onrender.com/api/cleaning";
+const INCOMING_API = "https://vatan-foods-backend-final.onrender.com/api/incoming";
 
 export default function Packing() {
   const [records, setRecords] = useState([]);
   const [batchList, setBatchList] = useState([]);
   const [selectedBatch, setSelectedBatch] = useState(null);
+  const [cleaningRecords, setCleaningRecords] = useState([]);
+  const [selectedCleaning, setSelectedCleaning] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -20,9 +22,9 @@ export default function Packing() {
 
   const initialForm = {
     batchId: "",
+    cleaningId: "",
     packingType: "Final Packaging",
     shift: "",
-    inputFromRaw: 0,
     inputFromCleaning: 0,
     outputPacked: 0,
     numberOfBags: 0,
@@ -30,7 +32,6 @@ export default function Packing() {
     wastage: 0,
     workers: "",
     status: "Pending",
-    pendingReason: "",
     remarks: "",
     vendorName: "",
     brandName: "",
@@ -51,18 +52,18 @@ export default function Packing() {
     }
   };
 
-  const fetchBatchIds = async () => {
+  const fetchBatchList = async () => {
     try {
-      const res = await axios.get(BATCH_API, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(INCOMING_API, { headers: { Authorization: `Bearer ${token}` } });
       setBatchList(res.data || []);
     } catch (err) {
-      console.error("Error fetching batch list:", err);
+      console.error("Error fetching batches:", err);
     }
   };
 
   useEffect(() => {
     fetchRecords();
-    fetchBatchIds();
+    fetchBatchList();
   }, []);
 
   // ---------- Helpers ----------
@@ -75,7 +76,7 @@ export default function Packing() {
     const { name, value } = e.target;
     let val = value;
 
-    if (["inputFromRaw", "inputFromCleaning", "outputPacked", "numberOfBags", "bagWeight", "noOfPackets", "packetsInEachBag"].includes(name)) {
+    if (["inputFromCleaning", "outputPacked", "numberOfBags", "bagWeight", "noOfPackets", "packetsInEachBag"].includes(name)) {
       val = val.replace(/[^\d.]/g, "");
       if ((val.match(/\./g) || []).length > 1) val = val.replace(/\.+$/, "");
     }
@@ -83,30 +84,46 @@ export default function Packing() {
     setFormData((prev) => ({ ...prev, [name]: val }));
   };
 
-  // Update itemName and outputQuantity from selected batch
+  // ---------- When batch is selected ----------
   useEffect(() => {
     if (!selectedBatch) return;
-    const fetchMaterial = async (id) => {
+
+    const fetchCleaningRecords = async (batchId) => {
       try {
-        const res = await axios.get(`${MATERIAL_API}/${id}`, { headers: { Authorization: `Bearer ${token}` } });
-        setFormData((prev) => ({
-          ...prev,
-          itemName: res.data.itemName || selectedBatch.itemName,
-          outputPacked: res.data.outputQuantity || 0,
-        }));
+        const res = await axios.get(`${CLEANING_API}?batchId=${batchId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setCleaningRecords(res.data || []);
       } catch (err) {
-        console.error("Error fetching material:", err);
+        console.error("Error fetching cleaning records:", err);
       }
     };
-    fetchMaterial(selectedBatch.batchId);
+
+    fetchCleaningRecords(selectedBatch.batchId);
+
+    // reset cleaning selection
+    setSelectedCleaning(null);
+    setFormData((prev) => ({ ...prev, cleaningId: "", inputFromCleaning: 0, itemName: "" }));
   }, [selectedBatch]);
 
-  // Recalculate wastage
+  // ---------- When cleaning record is selected ----------
   useEffect(() => {
-    const totalInput = formatNumber(formData.inputFromRaw) + formatNumber(formData.inputFromCleaning);
-    const wastage = totalInput - formatNumber(formData.outputPacked);
+    if (!selectedCleaning) return;
+
+    setFormData((prev) => ({
+      ...prev,
+      cleaningId: selectedCleaning.cleaningId,
+      itemName: selectedCleaning.itemName || "",
+      inputFromCleaning: selectedCleaning.outputQuantity || 0,
+      outputPacked: selectedCleaning.outputQuantity || 0,
+    }));
+  }, [selectedCleaning]);
+
+  // ---------- Calculate wastage ----------
+  useEffect(() => {
+    const wastage = formatNumber(formData.inputFromCleaning) - formatNumber(formData.outputPacked);
     setFormData((prev) => ({ ...prev, wastage: wastage >= 0 ? wastage : 0 }));
-  }, [formData.inputFromRaw, formData.inputFromCleaning, formData.outputPacked]);
+  }, [formData.inputFromCleaning, formData.outputPacked]);
 
   // ---------- Add / Update / Delete ----------
   const handleAdd = async () => {
@@ -156,17 +173,12 @@ export default function Packing() {
         <h2>Packing Records</h2>
         <button
           className="add-btn"
-          onClick={() => {
-            setFormData(initialForm);
-            setEditMode(false);
-            setShowDialog(true);
-          }}
+          onClick={() => { setFormData(initialForm); setEditMode(false); setShowDialog(true); }}
         >
           ➕ Add Packing Entry
         </button>
       </div>
 
-      {/* ---------- Dialog ---------- */}
       {showDialog && (
         <div className="dialog-overlay" onClick={() => setShowDialog(false)}>
           <div className="dialog" onClick={(e) => e.stopPropagation()}>
@@ -176,29 +188,51 @@ export default function Packing() {
             </div>
 
             <div className="form-grid">
+              {/* Batch Selection */}
               <div className="section-title">Batch Details</div>
               <label>Batch ID</label>
               <select
                 value={formData.batchId}
                 onChange={(e) => {
-                  const id = e.target.value;
-                  setFormData({ ...formData, batchId: id });
-                  const b = batchList.find((x) => x.batchId === id);
+                  const b = batchList.find(x => x.batchId === e.target.value);
                   setSelectedBatch(b || null);
+                  setFormData(prev => ({ ...prev, batchId: e.target.value }));
                 }}
               >
                 <option value="">Select Batch</option>
-                {batchList.map((b) => (
+                {batchList.map(b => (
                   <option key={b._id} value={b.batchId}>{b.batchId}</option>
                 ))}
               </select>
 
-              {selectedBatch && (
+              {/* Cleaning Selection */}
+              {cleaningRecords.length > 0 && (
+                <>
+                  <label>Cleaning Record</label>
+                  <select
+                    value={formData.cleaningId}
+                    onChange={(e) => {
+                      const c = cleaningRecords.find(x => x.cleaningId === e.target.value);
+                      setSelectedCleaning(c || null);
+                    }}
+                  >
+                    <option value="">Select Cleaning Record</option>
+                    {cleaningRecords.map(c => (
+                      <option key={c.cleaningId} value={c.cleaningId}>
+                        {c.cleaningId} | {c.itemName} | Available: {c.outputQuantity} kg
+                      </option>
+                    ))}
+                  </select>
+                </>
+              )}
+
+              {selectedCleaning && (
                 <p className="batch-info">
-                  <strong>Available:</strong> {selectedBatch.outputQuantity} kg | <strong>Item:</strong> {selectedBatch.itemName}
+                  <strong>Available:</strong> {selectedCleaning.outputQuantity} kg | <strong>Item:</strong> {selectedCleaning.itemName}
                 </p>
               )}
 
+              {/* Packing Info (unchanged) */}
               <div className="section-title">Packing Info</div>
               <label>Packing Type</label>
               <select value={formData.packingType} onChange={handleChange} name="packingType">
@@ -210,31 +244,28 @@ export default function Packing() {
               <input name="shift" value={formData.shift} onChange={handleChange} placeholder="Shift A/B/C" />
 
               <label>Vendor Name</label>
-              <input name="vendorName" placeholder="Vendor Name" value={formData.vendorName} onChange={handleChange} />
+              <input name="vendorName" value={formData.vendorName} onChange={handleChange} placeholder="Vendor Name" />
 
               <label>Brand Name</label>
-              <input name="brandName" placeholder="Brand Name" value={formData.brandName} onChange={handleChange} />
+              <input name="brandName" value={formData.brandName} onChange={handleChange} placeholder="Brand Name" />
 
-              <label>Input from Raw</label>
-              <input name="inputFromRaw" placeholder="Input From Raw" type="text" value={formData.inputFromRaw} onChange={handleChange} />
-
-              <label>Input from Cleaning</label>
-              <input name="inputFromCleaning" placeholder="Input From Cleaning" type="text" value={formData.inputFromCleaning} onChange={handleChange} />
+              <label>Input Quantity from Cleaning</label>
+              <input name="inputFromCleaning" value={formData.inputFromCleaning} onChange={handleChange} placeholder="Input from Cleaning" />
 
               <label>Output Packed</label>
-              <input name="outputPacked" placeholder="Output Packed" type="text" value={formData.outputPacked} onChange={handleChange} />
+              <input name="outputPacked" value={formData.outputPacked} onChange={handleChange} placeholder="Output Packed" />
 
-              <label>Number of Bags</label>
-              <input name="numberOfBags" placeholder="Number Of Bags" type="text" value={formData.numberOfBags} onChange={handleChange} />
+              <label>Each Packet Weight (kg)</label>
+              <input name="bagWeight" value={formData.bagWeight} onChange={handleChange} placeholder="Bag Weight" />
 
-              <label>Bag Weight (kg)</label>
-              <input name="bagWeight" placeholder="Bag Weight" type="text" value={formData.bagWeight} onChange={handleChange} />
+              <label>Total No of Packets</label>
+              <input name="noOfPackets" value={formData.noOfPackets} onChange={handleChange} placeholder="No Of Packets" />
 
-              <label>No of Packets</label>
-              <input name="noOfPackets" placeholder="No Of Packets" type="text" value={formData.noOfPackets} onChange={handleChange} />
+              <label>Number of Boxes</label>
+              <input name="numberOfBags" value={formData.numberOfBags} onChange={handleChange} placeholder="Number of Boxes" />
 
-              <label>Packets in Each Bag</label>
-              <input name="packetsInEachBag" placeholder="Pakets In Each Bag" type="text" value={formData.packetsInEachBag} onChange={handleChange} />
+              <label>No of Packets in Each Box</label>
+              <input name="packetsInEachBag" value={formData.packetsInEachBag} onChange={handleChange} placeholder="Packets in Each Box" />
 
               <label>Workers</label>
               <input name="workers" value={formData.workers} onChange={handleChange} placeholder="Comma separated" />
@@ -245,19 +276,6 @@ export default function Packing() {
                 <option value="Ongoing">Ongoing</option>
                 <option value="Completed">Completed</option>
               </select>
-
-              {formData.status === "Pending" && (
-                <>
-                  <label>Pending Reason</label>
-                  <select name="pendingReason" value={formData.pendingReason} onChange={handleChange}>
-                    <option value="">Select Reason</option>
-                    <option value="Stock shortage">Stock shortage</option>
-                    <option value="Machine issue">Machine issue</option>
-                    <option value="Labor shortage">Labor shortage</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </>
-              )}
 
               <label>Remarks</label>
               <textarea name="remarks" value={formData.remarks} onChange={handleChange} />
@@ -271,7 +289,7 @@ export default function Packing() {
         </div>
       )}
 
-      {/* ---------- Table ---------- */}
+      {/* Table (unchanged) */}
       <div className="table-container">
         <table>
           <thead>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.css";
@@ -9,15 +9,22 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  // const location = useLocation();
+  // const from = location.state?.from?.pathname || "/dashboard"; // fallback to dashboard
 
-  // Redirect to dashboard if already logged in
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      navigate("/dashboard");
-    }
-    // window.location.reload();
-  }, [navigate]);
+  // // Redirect if already logged in
+  // const checkUserLoggedInOrNot = () => {
+  //   const user = localStorage.getItem("user");
+  //   if (user) {
+  //     navigate("/dashboard", { replace: true });
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   checkUserLoggedInOrNot();
+  // }, []);
+
+    
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,9 +39,7 @@ const Login = () => {
       const { data } = await axios.post(
         "https://vatan-foods-backend-final.onrender.com/api/auth/login",
         { email, password },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
 
       // Save user + token in localStorage
@@ -49,11 +54,18 @@ const Login = () => {
       );
       localStorage.setItem("token", data.token);
 
-      navigate("/dashboard");
+
+
+      // Redirect to the page the user tried to access or dashboard
+      navigate("/dashboard", { replace: true });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     } catch (err) {
       console.error(err);
-      if (err.response && err.response.data) {
-        setError(err.response.data.message || "Invalid credentials");
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
       } else {
         setError("Server error. Please try again later.");
       }
@@ -84,18 +96,15 @@ const Login = () => {
             />
 
             <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="input-field"
-                autoComplete="current-password"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="input-field"
+              autoComplete="current-password"
             />
 
-
-            <button type="submit" className="login-btn">
-              Login
-            </button>
+            <button type="submit" className="login-btn">Login</button>
 
             <p className="signup-text" onClick={() => navigate("/signup")}>
               Don't have an account? <span className="signup-link">Signup</span>

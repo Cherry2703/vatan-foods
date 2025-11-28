@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import "./Materials.css";
 import { 
@@ -10,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 const API_BASE = "https://vatan-foods-backend-final.onrender.com/api/incoming";
 
 const Materials = () => {
-  // 1️⃣ Hooks at top level
   const navigate = useNavigate();
   const [materials, setMaterials] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,8 +23,6 @@ const Materials = () => {
     vendorName: "",
     vendorAddress: "",
     itemName: "",
-    totalBags: "",
-    weightPerBag: "",
     unit: "kg",
     totalQuantity: "",
     vehicleNo: "",
@@ -36,17 +32,12 @@ const Materials = () => {
   };
   const [formData, setFormData] = useState(initialForm);
 
-  // 2️⃣ Get user
   const user = JSON.parse(localStorage.getItem("user"));
 
-  // 3️⃣ Redirect if not logged in
   useEffect(() => {
-    if (!user) {
-      navigate("/login", { replace: true });
-    }
+    if (!user) navigate("/login", { replace: true });
   }, [user, navigate]);
 
-  // 4️⃣ Fetch materials
   const fetchMaterials = async () => {
     try {
       const res = await axios.get(API_BASE, {
@@ -62,16 +53,13 @@ const Materials = () => {
     if (user) fetchMaterials();
   }, [user]);
 
-  // 5️⃣ Prevent rendering if no user
   if (!user) return null;
 
-  // Input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Add, Update, Delete functions remain the same
   const handleAddMaterial = async () => {
     try {
       const payload = { ...formData, createdBy: user.uuid || "" };
@@ -117,7 +105,6 @@ const Materials = () => {
     m.itemName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // JSX remains the same...
   return (
     <div className="materials-container">
       {/* Header */}
@@ -148,7 +135,7 @@ const Materials = () => {
           <FaTruck className="icon success" />
           <div>
             <p>Total Quantity</p>
-            <h2>{materials.reduce((sum, m) => sum + (m.totalQuantity || 0), 0)} kg</h2>
+            <h2>{materials.reduce((sum, m) => sum + (Number(m.totalQuantity) || 0), 0)} kg</h2>
           </div>
         </div>
 
@@ -179,8 +166,6 @@ const Materials = () => {
             <tr>
               <th>Batch ID</th>
               <th>Item</th>
-              <th>Bags</th>
-              <th>Weight/Bag</th>
               <th>Total Qty(Present)</th>
               <th>Unit</th>
               <th>Vendor</th>
@@ -196,8 +181,6 @@ const Materials = () => {
                 <tr key={mat._id}>
                   <td>{mat.batchId}</td>
                   <td className="bold">{mat.itemName}</td>
-                  <td>{mat.totalBags}</td>
-                  <td>{mat.weightPerBag}</td>
                   <td>{mat.totalQuantity}</td>
                   <td>{mat.unit}</td>
                   <td>{mat.vendorName}</td>
@@ -222,7 +205,7 @@ const Materials = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="11" className="no-data">No records found</td>
+                <td colSpan="9" className="no-data">No records found</td>
               </tr>
             )}
           </tbody>
@@ -262,35 +245,29 @@ const Materials = () => {
   );
 };
 
-
 // Popup Dialog Component
 const PopupDialog = ({ title, formData, onChange, onClose, onSubmit }) => {
+  const visibleFields = [
+    "batchId",
+    "billNo",
+    "vendorName",
+    "vendorAddress",
+    "itemName",
+    "unit",
+    "totalQuantity",
+    "vehicleNo",
+    "driverName",
+    "driverMobile",
+    "remarks"
+  ];
+
   const handleInputChange = (e) => {
     let { name, value } = e.target;
 
-    // Driver mobile - only digits
     if (name === "driverMobile") value = value.replace(/\D/g, "").slice(0, 10);
-
-    // Vehicle number format
-    if (name === "vehicleNo") {
-      value = value.toUpperCase().replace(/[^A-Z0-9]/g, "");
-      let formatted = "";
-      if (value.length > 0) formatted = value.slice(0, 2);
-      if (value.length > 2) formatted += value.slice(2, 4);
-      if (value.length > 4) formatted += value.slice(4, 6);
-      if (value.length > 6) formatted += value.slice(6, 10);
-      value = formatted;
-    }
-
-    let updatedForm = { ...formData, [name]: value };
-    if (name === "totalBags" || name === "weightPerBag") {
-      const bags = Number(updatedForm.totalBags) || 0;
-      const weight = Number(updatedForm.weightPerBag) || 0;
-      updatedForm.totalQuantity = bags * weight;
-    }
+    if (name === "vehicleNo") value = value.toUpperCase().replace(/[^A-Z0-9]/g, "");
 
     onChange({ target: { name, value } });
-    onChange({ target: { name: "totalQuantity", value: updatedForm.totalQuantity } });
   };
 
   return (
@@ -299,40 +276,31 @@ const PopupDialog = ({ title, formData, onChange, onClose, onSubmit }) => {
         <h3>{title}</h3>
         <div className="dialog-body">
           <div className="form-grid">
-            {Object.entries(formData).map(([key, val]) => {
-              if (key === "totalQuantity") {
-                return (
-                  <div className="form-field" key={key}>
-                    <label>Total Quantity (Auto)</label>
-                    <input name={key} value={val} readOnly style={{ background: "#f1f1f1" }} />
-                  </div>
-                );
-              }
-              if (key === "unit") {
-                return (
-                  <div className="form-field" key={key}>
+            {visibleFields.map((key) => (
+              <div className="form-field" key={key}>
+                {key === "unit" ? (
+                  <>
                     <label>Unit</label>
-                    <select name={key} value={val} onChange={handleInputChange}>
+                    <select name={key} value={formData[key] || ""} onChange={handleInputChange}>
                       <option value="kg">Kg</option>
                       <option value="gms">Grams</option>
                       <option value="ltr">Litre</option>
                       <option value="pcs">Pieces</option>
                     </select>
-                  </div>
-                );
-              }
-              return (
-                <div className="form-field" key={key}>
-                  <label>{key.replace(/([A-Z])/g, " $1")}</label>
-                  <input
-                    name={key}
-                    placeholder={`Enter ${key}`}
-                    value={val || ""}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              );
-            })}
+                  </>
+                ) : (
+                  <>
+                    <label>{key.replace(/([A-Z])/g, " $1")}</label>
+                    <input
+                      name={key}
+                      placeholder={`Enter ${key}`}
+                      value={formData[key] || ""}
+                      onChange={handleInputChange}
+                    />
+                  </>
+                )}
+              </div>
+            ))}
           </div>
         </div>
         <div className="dialog-actions">
@@ -343,4 +311,5 @@ const PopupDialog = ({ title, formData, onChange, onClose, onSubmit }) => {
     </div>
   );
 };
+
 export default Materials;
