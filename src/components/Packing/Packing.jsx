@@ -491,6 +491,8 @@ export default function Packing() {
     }
   };
 
+  
+
   // ---------- JSX ----------
   return (
     <div className="packing-wrapper">
@@ -531,7 +533,7 @@ export default function Packing() {
               >
                 <option value="">Select Batch</option>
                 {batchList.map((b) => (
-                  <option key={b._id} value={b.batchId}>{b.batchId}</option>
+                  <option key={b._id} value={b.batchId}>{b.batchId} - {b.itemName} - {b.outputQuantity} kgs</option>
                 ))}
               </select>
 
