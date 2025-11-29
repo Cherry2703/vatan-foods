@@ -118,13 +118,13 @@ const Navbar = () => {
               </ul>
             )}
           </li>
-
+{/* 
           <li className="notification-wrapper">
             <FaBell className="icon" />
             {notifications > 0 && (
               <span className="notification-count">{notifications}</span>
             )}
-          </li>
+          </li> */}
 
           {/* Profile (desktop) */}
           <li className="profile-wrapper" ref={profileRefDesktop}>
@@ -139,7 +139,6 @@ const Navbar = () => {
               <div className="profile-popup">
                 <h4>{user?.name || "Guest"}</h4>
                 <p>Email: {user?.email || "-"}</p>
-                <p>Mobile: {user?.mobile || "N/A"}</p>
                 <button
                   type="button"
                   className="logout-btn"
@@ -184,12 +183,12 @@ const Navbar = () => {
           <hr className="mobile-divider" />
 
           <div className="mobile-bottom">
-            <div className="mobile-notification">
+            {/* <div className="mobile-notification">
               <FaBell className="icon" />
               {notifications > 0 && (
                 <span className="notification-count">{notifications}</span>
               )}
-            </div>
+            </div> */}
 
             {/* Profile (mobile) */}
             <div className="mobile-profile" ref={profileRefMobile}>
@@ -204,7 +203,6 @@ const Navbar = () => {
                 <div className="profile-popup-mobile">
                   <h4>{user?.name || "Guest"}</h4>
                   <p>Email: {user?.email || "-"}</p>
-                  <p>Mobile: {user?.mobile || "N/A"}</p>
                   <button
                     type="button"
                     className="logout-btn"

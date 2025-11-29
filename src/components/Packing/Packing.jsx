@@ -570,10 +570,10 @@ export default function Packing() {
 
 
               <label>Each Packet Weight (kg)</label>
-              <input name="bagWeight" placeholder="Bag Weight" type="text" value={formData.bagWeight} onChange={handleChange} />
+              <input name="bagWeight" placeholder="Each Pack Weight" type="text" value={formData.bagWeight} onChange={handleChange} />
 
               <label>Total No of Packets</label>
-              <input name="noOfPackets" placeholder="No Of Packets" type="text" value={formData.noOfPackets} onChange={handleChange} />
+              <input name="noOfPackets" placeholder="Total No Of Packets" type="text" value={formData.noOfPackets} onChange={handleChange} />
 
               <label>Number of Boxes</label>
               <input name="numberOfBags" placeholder="Number Of Boxes" type="text" value={formData.numberOfBags} onChange={handleChange} />

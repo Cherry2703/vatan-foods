@@ -76,39 +76,112 @@ export default function Cleaning() {
 
   // ---------auto calculations part ----------
 
-  const handleChange = (e) => {
-    const { name, value: rawValue, type, checked } = e.target;
-    let value = type === "checkbox" ? checked : rawValue;
+  // const handleChange = (e) => {
+  //   const { name, value: rawValue, type, checked } = e.target;
+  //   let value = type === "checkbox" ? checked : rawValue;
 
-    if (["inputQuantity", "outputQuantity", "coverWastage"].includes(name)) {
-      value = value.replace(/[^\d.]/g, "");
-      if ((value.match(/\./g) || []).length > 1) value = value.replace(/\.+$/, "");
+  //   if (["inputQuantity", "outputQuantity", "coverWastage"].includes(name)) {
+  //     value = value.replace(/[^\d.]/g, "");
+  //     if ((value.match(/\./g) || []).length > 1) value = value.replace(/\.+$/, "");
+  //   }
+
+  //   setFormData((prev) => {
+  //     const next = { ...prev, [name]: value };
+
+  //     // Auto-calc fields
+  //     if (name === "inputQuantity" || name === "outputQuantity") {
+  //       const inputQ = formatNumber(name === "inputQuantity" ? value : next.inputQuantity);
+  //       // const outputQ = formatNumber(name === "outputQuantity" ? value : next.outputQuantity);
+  //       // next.wastageQuantity = inputQ - outputQ >= 0 ? inputQ - outputQ : 0;
+  //       next.usedQuantity = inputQ;
+  //       next.remainingAfterCleaning = prev.remainingAfterCleaning; // will update on save
+  //     }
+
+  //     // If batchId selected, auto-fill item name and remaining
+  //     if (name === "batchId") {
+  //       const batch = incomingData.find((b) => b.batchId === value);
+  //       if (batch) {
+  //         next.itemName = batch.itemName;
+  //         // next.remainingAfterCleaning = batch.totalQuantity; // current available
+  //       }
+  //     }
+
+  //     return next;
+  //   });
+  // };
+
+
+//   const handleChange = (e) => {
+//   const { name, value: rawValue, type, checked } = e.target;
+//   let value = type === "checkbox" ? checked : rawValue;
+
+//   // Allow only numeric fields to accept numbers
+//   if (["inputQuantity", "outputQuantity", "wastageQuantity", "usedQuantity", "coverWastage"].includes(name)) {
+//     value = value.replace(/[^\d.]/g, "");
+//     if ((value.match(/\./g) || []).length > 1) value = value.replace(/\.+$/, "");
+//   }
+
+//   setFormData((prev) => {
+//     const next = { ...prev, [name]: value };
+
+//     // --- AUTO FILL ONLY ITEM NAME ---
+//     if (name === "batchId") {
+//       const batch = incomingData.find((b) => b.batchId === value);
+//       if (batch) {
+//         next.itemName = batch.itemName;
+//       }
+
+//       // recalc remaining after cleaning when changing batch
+//       const totalQty = batch ? Number(batch.totalQuantity) : 0;
+//       const usedQty = Number(next.usedQuantity || 0);
+//       next.remainingAfterCleaning = totalQty - usedQty >= 0 ? totalQty - usedQty : 0;
+//     }
+
+//     // --- AUTO CALCULATE ONLY remainingAfterCleaning ---
+//     if (name === "usedQuantity") {
+//       const batch = incomingData.find((b) => b.batchId === next.batchId);
+//       const totalQty = batch ? Number(batch.totalQuantity) : 0;
+//       const usedQty = Number(value || 0);
+
+//       next.remainingAfterCleaning = totalQty - usedQty >= 0 ? totalQty - usedQty : 0;
+//     }
+
+//     return next;
+//   });
+// };
+
+
+const handleChange = (e) => {
+  const { name, value: rawValue } = e.target;
+  let value = rawValue;
+
+  // Only numeric inputs allowed
+  if (["inputQuantity", "outputQuantity", "wastageQuantity"].includes(name)) {
+    value = value.replace(/[^\d.]/g, "");
+    if ((value.match(/\./g) || []).length > 1) value = value.replace(/\.+$/, "");
+  }
+
+  setFormData((prev) => {
+    const next = { ...prev, [name]: value };
+    const batch = incomingData.find((b) => b.batchId === next.batchId);
+
+    if (batch) {
+      next.itemName = batch.itemName;
+
+      // Only usedQuantity = inputQuantity
+      next.usedQuantity = Number(next.inputQuantity || 0);
+
+      // remainingAfterCleaning based on current batch total
+      const totalQty = Number(batch.totalQuantity || 0);
+      next.remainingAfterCleaning =
+        totalQty - next.usedQuantity >= 0 ? totalQty - next.usedQuantity : 0;
     }
 
-    setFormData((prev) => {
-      const next = { ...prev, [name]: value };
+    return next;
+  });
+};
 
-      // Auto-calc fields
-      // if (name === "inputQuantity" || name === "outputQuantity") {
-      //   const inputQ = formatNumber(name === "inputQuantity" ? value : next.inputQuantity);
-      //   const outputQ = formatNumber(name === "outputQuantity" ? value : next.outputQuantity);
-      //   next.wastageQuantity = inputQ - outputQ >= 0 ? inputQ - outputQ : 0;
-      //   next.usedQuantity = inputQ;
-      //   next.remainingAfterCleaning = prev.remainingAfterCleaning; // will update on save
-      // }
 
-      // If batchId selected, auto-fill item name and remaining
-      if (name === "batchId") {
-        const batch = incomingData.find((b) => b.batchId === value);
-        if (batch) {
-          next.itemName = batch.itemName;
-          // next.remainingAfterCleaning = batch.totalQuantity; // current available
-        }
-      }
-
-      return next;
-    });
-  };
 
 // -------------auto calaculations part
 
@@ -172,16 +245,32 @@ export default function Cleaning() {
     if (!formData.batchId || !formData.itemName || !formData.inputQuantity)
       return alert("Please fill required fields.");
 
+    // const payload = {
+    //   ...formData,
+    //   inputQuantity: formatNumber(formData.inputQuantity),
+    //   outputQuantity: formatNumber(formData.outputQuantity),
+    //   wastageQuantity: formatNumber(formData.wastageQuantity),
+    //   usedQuantity: formatNumber(formData.usedQuantity),
+    //   remainingAfterCleaning: formatNumber(formData.remainingAfterCleaning),
+    //   coverWastage: formatNumber(formData.coverWastage),
+    //   createdBy: user.uuid,
+    // };
+
     const payload = {
-      ...formData,
-      inputQuantity: formatNumber(formData.inputQuantity),
-      outputQuantity: formatNumber(formData.outputQuantity),
-      wastageQuantity: formatNumber(formData.wastageQuantity),
-      usedQuantity: formatNumber(formData.usedQuantity),
-      remainingAfterCleaning: formatNumber(formData.remainingAfterCleaning),
-      coverWastage: formatNumber(formData.coverWastage),
-      createdBy: user.uuid,
-    };
+  ...formData,
+  inputQuantity: formatNumber(formData.inputQuantity),
+  outputQuantity: formatNumber(formData.outputQuantity),
+  wastageQuantity: formatNumber(formData.wastageQuantity),
+  usedQuantity: formatNumber(formData.usedQuantity),
+  remainingAfterCleaning: formatNumber(formData.remainingAfterCleaning),
+  coverWastage: formatNumber(formData.coverWastage),
+  signed: !!formData.signed, // ✅ convert to boolean
+  createdBy: user.uuid,
+};
+
+
+    console.log(payload);
+    
 
     try {
       await axios.post(CLEANING_API, payload, { headers: { Authorization: `Bearer ${token}` } });
@@ -201,16 +290,29 @@ export default function Cleaning() {
 
     const oldUsedQty = selected.usedQuantity || 0;
 
+    // const payload = {
+    //   ...formData,
+    //   inputQuantity: formatNumber(formData.inputQuantity),
+    //   outputQuantity: formatNumber(formData.outputQuantity),
+    //   wastageQuantity: formatNumber(formData.wastageQuantity),
+    //   usedQuantity: formatNumber(formData.usedQuantity),
+    //   remainingAfterCleaning: formatNumber(formData.remainingAfterCleaning),
+    //   coverWastage: formatNumber(formData.coverWastage),
+    //   createdBy: user.uuid,
+    // };
+
     const payload = {
-      ...formData,
-      inputQuantity: formatNumber(formData.inputQuantity),
-      outputQuantity: formatNumber(formData.outputQuantity),
-      wastageQuantity: formatNumber(formData.wastageQuantity),
-      usedQuantity: formatNumber(formData.usedQuantity),
-      remainingAfterCleaning: formatNumber(formData.remainingAfterCleaning),
-      coverWastage: formatNumber(formData.coverWastage),
-      createdBy: user.uuid,
-    };
+  ...formData,
+  inputQuantity: formatNumber(formData.inputQuantity),
+  outputQuantity: formatNumber(formData.outputQuantity),
+  wastageQuantity: formatNumber(formData.wastageQuantity),
+  usedQuantity: formatNumber(formData.usedQuantity),
+  remainingAfterCleaning: formatNumber(formData.remainingAfterCleaning),
+  coverWastage: formatNumber(formData.coverWastage),
+  signed: !!formData.signed, // ✅ convert to boolean
+  createdBy: user.uuid,
+};
+
 
     try {
       await axios.put(`${CLEANING_API}/${selected.cleaningId}`, payload, { headers: { Authorization: `Bearer ${token}` } });
@@ -373,12 +475,21 @@ const closeHistory = () => setShowHistoryFor(null);
                   <input name="wastageQuantity" placeholder="Wastage Quantity" value={formData.wastageQuantity} onChange={handleChange} />
                 </div>
                 <div className="form-field">
-                  <label>Used Quantity</label>
-                  <input name="usedQuantity" placeholder="Total Quantity used for cleaning" value={formData.usedQuantity} onChange={handleChange} />
+                  <label>Total Used Quantity</label>
+                  {/* <input name="usedQuantity" placeholder="Total Quantity used for cleaning" value={formData.inputQuantity} onChange={handleChange} /> */}
+       <input name="usedQuantity" placeholder="Total Quantity used for cleaning" value={formData.usedQuantity} readOnly />
+
                 </div>
                 <div className="form-field">
-                  <label>Remaining Raw Material After Cleaning</label>
-                  <input name="remainingAfterCleaning" placeholder="Remaining Raw-Material after cleaning" value={formData.remainingAfterCleaning} onChange={handleChange} />
+                  <label>Stock Balance</label>
+                  <input
+                      type="number"
+                      name="remainingAfterCleaning"
+                      value={formData.remainingAfterCleaning || ""}
+                      placeholder="Stock Balance"
+                      readOnly
+                    />
+
                 </div>
                 <div className="form-field">
                   <label>Cover Wastage</label>
