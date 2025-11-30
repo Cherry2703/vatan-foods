@@ -513,6 +513,7 @@ export default function Orders() {
     driverContact: "",
     warehouseLocation: "",
     remarks: "",
+    orderStatus: "Pending"
   };
 
   const [formData, setFormData] = useState(emptyForm);
@@ -526,6 +527,8 @@ export default function Orders() {
       });
       // support responses like { orders: [...] } or array directly
       setOrders(res.data.orders || res.data || []);
+      console.log("orders",res.data);
+      
     } catch (err) {
       console.error("❌ Error fetching orders:", err);
     } finally {
@@ -828,6 +831,16 @@ export default function Orders() {
           </div>
         </div>
 
+        <div className="field">
+          <label>Order Staus</label>
+          <select name="orderStatus" value={formData.orderStatus} onChange={handleChange}>
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+
         <div className="field full">
           <label>Remarks</label>
           <textarea name="remarks" placeholder="Anything else if you want to convey about your order?" rows="2" value={formData.remarks} onChange={handleChange} />
@@ -861,6 +874,7 @@ export default function Orders() {
                   <th>City</th>
                   <th>Total</th>
                   <th>Delivery</th>
+                  <th>Order Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -872,6 +886,8 @@ export default function Orders() {
                     <td>{order.deliveryCity}</td>
                     <td>₹{Number(order.totalAmount || 0).toFixed(2)}</td>
                     <td>{order.deliveryDate ? (order.deliveryDate.split ? order.deliveryDate.split("T")[0] : order.deliveryDate) : "—"}</td>
+                    <td>{order.orderStatus}</td>
+
                     <td className="actions-cell">
                       <button className="btn small" onClick={() => setSelectedOrder(order)}>📄 Show Items</button>
                       <button className="btn small" onClick={() => handleEdit(order)}>✏️</button>

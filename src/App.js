@@ -247,6 +247,7 @@ import TrackOrder from "./components/TrackOrder/TrackOrder";
 import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
 import NotFound from "./components/NotFound/NotFound";
+import Reports from "./components/Reports/Reports";
 
 function App() {
   const isLoggedIn = !!localStorage.getItem("user");
@@ -329,6 +330,14 @@ function App() {
           element={
             <ProtectedRoute isLoggedIn={isLoggedIn}>
               <Settings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <Reports />
             </ProtectedRoute>
           }
         />
