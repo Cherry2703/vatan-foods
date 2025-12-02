@@ -30,6 +30,9 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
+    console.log("login called",email, password);
+    
+
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
@@ -41,6 +44,9 @@ const Login = () => {
         { email, password },
         { headers: { "Content-Type": "application/json" } }
       );
+
+      console.log(data);
+      
 
       // Save user + token in localStorage
       localStorage.setItem(

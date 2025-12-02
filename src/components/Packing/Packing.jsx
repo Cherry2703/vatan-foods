@@ -639,6 +639,7 @@ export default function Packing() {
       itemName: r.itemName || "",
       noOfPackets: r.noOfPackets || 0,
       packetsInEachBag: r.packetsInEachBag || 0,
+      invoiceNumber: r.invoiceNumber || "",
     });
     setEditMode(true);
     setShowDialog(true);
@@ -708,11 +709,21 @@ export default function Packing() {
                 </p>
               )}
 
+              <div>
+                <label>Invoice Number</label>
+                <input
+                  name="invoiceNumber"
+                  value={formData.invoiceNumber}
+                  onChange={handleChange}
+                  placeholder="Invoice Number"  />
+              </div>
+
               <div className="section-title">Packing Info</div>
               <label>Packing Type</label>
               <select value={formData.packingType} onChange={handleChange} name="packingType">
-                <option value="Initial Packaging">Manual Packing</option>
-                <option value="Final Packaging">Machinery Packing</option>
+                <option value="Manual Packaging">Manual Packing</option>
+                <option value="Machine Packaging">Machinery Packing</option>
+                <option value="Loose Packing">Loose Packing</option>
               </select>
 
               <label>Shift</label>
@@ -774,6 +785,7 @@ export default function Packing() {
           <thead>
             <tr>
               <th>Batch ID</th>
+              <th>Invoice Number</th>
               <th>Packing Type</th>
               <th>Shift</th>
               <th>Output</th>
@@ -789,6 +801,7 @@ export default function Packing() {
             {records.map((r) => (
               <tr key={r.packingId}>
                 <td>{r.batchId}</td>
+                <td>{r.invoiceNumber || "-"}</td>
                 <td>{r.packingType}</td>
                 <td>{r.shift}</td>
                 <td>{r.outputPacked}</td>
