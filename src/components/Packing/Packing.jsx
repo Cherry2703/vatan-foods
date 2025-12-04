@@ -745,21 +745,26 @@ export default function Packing() {
                 <strong>Remaining after this packing:</strong> {formData.inputFromCleaning - formData.outputPacked} kg
               </p>
 
+              <div>
               <label>Each Packet Weight (kg)</label>
               <input name="bagWeight" placeholder="Each Pack Weight" type="text" value={formData.bagWeight} onChange={handleChange} />
-
+              </div>
+              <div>
               <label>Total No of Packets</label>
               <input name="noOfPackets" placeholder="Total No Of Packets" type="text" value={formData.noOfPackets} onChange={handleChange} />
-
+              </div>
+              <div>
               <label>Number of Boxes</label>
               <input name="numberOfBags" placeholder="Number Of Boxes" type="text" value={formData.numberOfBags} onChange={handleChange} />
-
+              </div>
+              <div>
               <label>No of Packets in Each Box</label>
               <input name="packetsInEachBag" placeholder="No of Packets In Each Box" type="text" value={formData.packetsInEachBag} onChange={handleChange} />
-
+              </div>
+              <div>
               <label>Workers</label>
               <input name="workers" value={formData.workers} onChange={handleChange} placeholder="Comma separated" />
-
+              </div>
               <label>Status</label>
               <select name="status" value={formData.status} onChange={handleChange}>
                 <option value="Pending">Pending</option>
