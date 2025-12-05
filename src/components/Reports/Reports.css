@@ -1,138 +1,115 @@
-/* Container */
-.reports-container {
-  padding: 20px;
-  max-width: 1400px;
-  margin: 0 auto;
-  font-family: "Roboto", sans-serif;
-  background-color: #f7f9fc;
+/* Reports.css - Option A Enterprise Blue Theme */
+:root{
+  --bg: #f6fbff;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #0b61a4; /* enterprise blue */
+  --accent-2: #0f75c2;
+  --shadow: 0 8px 24px rgba(11,97,164,0.06);
+  --radius: 12px;
+  --pad: 1rem;
+  --gap: 1rem;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.reports-page {
+  background: var(--bg);
   min-height: 100vh;
-  transition: all 0.3s ease-in-out;
+  padding: 1.25rem;
+  color: #0f172a;
 }
 
-/* Title */
-.reports-title {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  color: #1f2937;
-  margin-bottom: 25px;
+/* Header */
+.reports-header{
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  margin-bottom: 1rem;
+}
+.reports-header h1{ margin:0; color:var(--accent); font-size:1.3rem; }
+.reports-actions .btn{
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  color: white; border: none; padding: 0.5rem 0.9rem; border-radius: 999px; cursor:pointer;
+  box-shadow: 0 8px 20px rgba(11,97,164,0.12);
+}
+.reports-actions .btn:disabled{ opacity:0.6; cursor:not-allowed; }
+
+/* Loading / Error */
+.reports-loading, .reports-error {
+  margin: 0.5rem 0 1rem 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(11,97,164,0.06);
+  color: var(--muted);
 }
 
-/* Filters */
-.filter-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 30px;
-  align-items: center;
+/* Main grid - four main sections stacked in a responsive layout */
+.reports-main{
+  display:grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap);
 }
 
-.filter-container select,
-.filter-container input {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #cbd5e1;
-  outline: none;
-  transition: all 0.2s ease-in-out;
-  font-size: 0.95rem;
+/* each report section is 12 cols on small screens, 6 cols on mid, 12/6/6 as needed */
+.reports-section{
+  grid-column: span 12;
+  background: transparent;
+}
+@media(min-width:900px){
+  .reports-section{ grid-column: span 6; } /* 2 columns per row on wide screens */
 }
 
-.filter-container select:hover,
-.filter-container input:hover {
-  border-color: #7ec8e3;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+/* internal card container used by subcomponents */
+.report-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  box-shadow: var(--shadow);
+  min-height: 300px;
+  display:flex;
+  flex-direction:column;
+  gap:0.75rem;
 }
 
-.filter-container button {
-  padding: 8px 16px;
-  background-color: #7ec8e3;
-  border: none;
-  color: #fff;
-  font-weight: 600;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
+/* card header */
+.card-header {
+  display:flex; align-items:center; justify-content:space-between;
 }
+.card-title { font-weight:600; color:var(--accent); margin:0; font-size:1rem; }
+.card-sub { color:var(--muted); font-size:0.9rem; }
 
-.filter-container button:hover {
-  background-color: #66b2d4;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+/* small KPI row */
+.kpi-row { display:flex; gap:0.75rem; flex-wrap:wrap; }
+.kpi {
+  background: linear-gradient(180deg,#ffffff,#fbfdff);
+  border-radius: 10px;
+  padding: 0.6rem;
+  min-width: 140px;
+  box-shadow: 0 6px 14px rgba(8,63,117,0.04);
 }
+.kpi h3 { margin:0; font-size:1.05rem; color:#0b61a4; }
+.kpi p { margin:0; color:var(--muted); font-size:0.85rem; }
 
-/* Grid for charts */
+/* charts area */
 .charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 25px;
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+@media(max-width:900px){
+  .charts-grid { grid-template-columns: 1fr; }
 }
 
-/* Individual chart cards */
-.chart-card {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
+/* small lists and tables */
+.small-list { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:0.4rem; }
+.small-list li { display:flex; justify-content:space-between; align-items:center; padding:0.35rem 0; border-bottom:1px dashed #eef6ff; color:var(--muted); }
 
-.chart-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.12);
-}
+/* table style */
+.table { width:100%; border-collapse:collapse; font-size:0.9rem; }
+.table th { text-align:left; padding:0.6rem 0; color:var(--muted); }
+.table td { padding:0.4rem 0; color:#0f172a; }
 
-/* Chart title */
-.chart-card h3 {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 15px;
-  text-align: center;
-}
+/* utility */
+.center { display:flex; align-items:center; justify-content:center; height:100%; }
+.small-muted { color:var(--muted); font-size:0.85rem; }
 
-/* Chart canvas styling */
-.chart-card canvas {
-  padding: 10px 0;
-}
-
-/* Tooltip customization for charts */
-.chartjs-tooltip {
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  transition: all 0.2s ease-in-out;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .filter-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .filter-container input,
-  .filter-container select,
-  .filter-container button {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .reports-title {
-    font-size: 1.6rem;
-  }
-
-  .chart-card h3 {
-    font-size: 1rem;
-  }
-}
-
-/* 3D style shadow effect for bars */
-.chart-card .chartjs-render-monitor {
-  border-radius: 12px;
-}
+/* footer note */
+.reports-footer { margin-top:1rem; color:var(--muted); font-size:0.85rem; }
