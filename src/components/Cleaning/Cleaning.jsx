@@ -39,6 +39,7 @@ export default function Cleaning() {
     signed: false,
     vendorName: "",
     remarks: "",
+    cleanedOn: "",
   };
   const [formData, setFormData] = useState(initialForm);
   const token = localStorage.getItem("token");
@@ -207,6 +208,7 @@ const handleChange = (e) => {
       remainingAfterCleaning: String(rec.remainingAfterCleaning || ""),
       coverWastage: String(rec.coverWastage || ""),
       signed: !!rec.signed,
+       cleanedOn: rec.cleanedOn ? rec.cleanedOn.split("T")[0] : "", 
     });
     setShowDialog(true);
   };
@@ -266,6 +268,7 @@ const handleChange = (e) => {
   coverWastage: formatNumber(formData.coverWastage),
   signed: !!formData.signed, // ✅ convert to boolean
   createdBy: user.uuid,
+  cleanedOn: formData.cleanedOn || Date.now(), // ✅ ensure cleanedOn is sent
 };
 
 
@@ -311,6 +314,7 @@ const handleChange = (e) => {
   coverWastage: formatNumber(formData.coverWastage),
   signed: !!formData.signed, // ✅ convert to boolean
   createdBy: user.uuid,
+  cleanedOn: formData.cleanedOn || Date.now(), // ✅ ensure cleanedOn is sent
 };
 
 
@@ -398,6 +402,7 @@ const closeHistory = () => setShowHistoryFor(null);
               <th>Unit</th>
               <th>Operator</th>
               <th>Shift</th>
+              <th>Cleaned On</th>
               <th>Signed</th>
               <th>Actions</th>
             </tr>
@@ -418,6 +423,7 @@ const closeHistory = () => setShowHistoryFor(null);
                 <td>{rec.unit}</td>
                 <td>{rec.operator}</td>
                 <td>{rec.shift}</td>
+                <td>{rec.cleanedOn ? rec.cleanedOn.split("T")[0] : "-"}</td>
                 <td>{rec.signed ? <FaCheckCircle className="signed-true" /> : "❌"}</td>
                 <td>
                   <button onClick={() => openEdit(rec)} title="Edit"><FaEdit /></button>
@@ -515,6 +521,17 @@ const closeHistory = () => setShowHistoryFor(null);
                     <option value="Night">Night</option>
                   </select>
                 </div>
+
+                <div className="form-group">
+                  <label>Cleaned On:</label>
+                  <input
+                    type="date"
+                    name="cleanedOn"
+                    value={formData.cleanedOn}
+                    onChange={handleChange}
+                  />
+                </div>
+
                 <div className="form-field">
                   <label>Signed</label>
                   <input name="signed" type="checkbox" checked={!!formData.signed} onChange={handleChange} />

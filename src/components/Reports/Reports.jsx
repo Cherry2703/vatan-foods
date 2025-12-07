@@ -304,6 +304,9 @@ const Reports = () => {
         axios.get(`${API_BASE}/packing`, { headers }),
         axios.get(`${API_BASE}/orders`, { headers }),
       ]);
+      const totalIncoming = incomingData.reduce((sum, r) => sum + Number(r.totalQuantity || 0), 0);
+      const totalPacked = packingData.reduce((sum, r) => sum + Number(r.outputQuantity || r.totalPacked || 0), 0);
+
       setIncomingData(Array.isArray(incRes.data) ? incRes.data : incRes.data.data || []);
       setCleaningData(Array.isArray(cleanRes.data) ? cleanRes.data : cleanRes.data.data || []);
       setPackingData(Array.isArray(packRes.data) ? packRes.data : packRes.data.data || []);
@@ -331,6 +334,8 @@ const Reports = () => {
 
       {loading && <div className="reports-loading">Loading datasets...</div>}
       {error && <div className="reports-error">Error: {error}</div>}
+
+      
 
       <main className="reports-main">
         {/* Grid layout: all components render at once */}
