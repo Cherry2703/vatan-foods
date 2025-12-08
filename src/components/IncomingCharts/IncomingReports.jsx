@@ -203,6 +203,9 @@ const formatDateKey = (iso) => {
 
 const IncomingReports = ({ incomingData = [], startDate, endDate }) => {
 
+  console.log("incoming reports", startDate,endDate);
+  
+
   // 🔥 1. Filter by date range first
   const filteredData = useMemo(() => {
     if (!startDate && !endDate) return incomingData;

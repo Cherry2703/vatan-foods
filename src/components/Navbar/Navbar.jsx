@@ -29,7 +29,7 @@ const Navbar = () => {
     { label: "Raw Materials", link: "/raw-materials" },
     { label: "Cleaning", link: "/cleaning" },
     { label: "Packing", link: "/packing" },
-    // {label: "Reports", link: "/reports"},
+    {label: "Reports", link: "/reports"},
     { label: "Settings", link: "/settings" },
   ];
 
