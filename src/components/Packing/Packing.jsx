@@ -721,8 +721,8 @@ export default function Packing() {
               <div className="section-title">Packing Info</div>
               <label>Packing Type</label>
               <select value={formData.packingType} onChange={handleChange} name="packingType">
-                <option value="Manual Packaging">Manual Packing</option>
-                <option value="Machine Packaging">Machinery Packing</option>
+                <option value="Manual Packing">Manual Packing</option>
+                <option value="Machine Packing">Machine Packing</option>
                 <option value="Loose Packing">Loose Packing</option>
               </select>
 

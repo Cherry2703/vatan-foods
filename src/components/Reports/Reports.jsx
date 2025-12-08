@@ -243,44 +243,140 @@
 
 
 
+// // working component below on 07-12-2025
+// import React, { useEffect, useState, useCallback } from "react";
+// import axios from "axios";
+// import {
+//   Chart as ChartJS,
+//   CategoryScale,
+//   LinearScale,
+//   BarElement,
+//   PointElement,
+//   LineElement,
+//   ArcElement,
+//   Title,
+//   Tooltip,
+//   Legend,
+// } from "chart.js";
+// import ChartDataLabels from "chartjs-plugin-datalabels";
+
+// import "./Reports.css";
+// import IncomingReports from "../IncomingCharts/IncomingReports";
+// import CleaningReports from "../CleaningReports/CleaningReports";
+// import PackingReports from "../PackingReports/PackingReports";
+// import OrdersReports from "../OrdersReports/OrdersReports";
+
+// // Register ChartJS globally once
+// ChartJS.register(
+//   CategoryScale,
+//   LinearScale,
+//   BarElement,
+//   PointElement,
+//   LineElement,
+//   ArcElement,
+//   Title,
+//   Tooltip,
+//   Legend,
+//   ChartDataLabels
+// );
+
+// const API_BASE = "https://vatan-foods-backend-final.onrender.com/api"; // change if needed
+
+// const Reports = () => {
+//   const [incomingData, setIncomingData] = useState([]);
+//   const [cleaningData, setCleaningData] = useState([]);
+//   const [packingData, setPackingData] = useState([]);
+//   const [ordersData, setOrdersData] = useState([]);
+
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   const token = localStorage.getItem("token") || "";
+
+//   const fetchAll = useCallback(async () => {
+//     setLoading(true);
+//     setError(null);
+//     try {
+//       const headers = token ? { Authorization: `Bearer ${token}` } : {};
+//       const [incRes, cleanRes, packRes, ordersRes] = await Promise.all([
+//         axios.get(`${API_BASE}/incoming`, { headers }),
+//         axios.get(`${API_BASE}/cleaning`, { headers }),
+//         axios.get(`${API_BASE}/packing`, { headers }),
+//         axios.get(`${API_BASE}/orders`, { headers }),
+//       ]);
+//       const totalIncoming = incomingData.reduce((sum, r) => sum + Number(r.totalQuantity || 0), 0);
+//       const totalPacked = packingData.reduce((sum, r) => sum + Number(r.outputQuantity || r.totalPacked || 0), 0);
+
+//       setIncomingData(Array.isArray(incRes.data) ? incRes.data : incRes.data.data || []);
+//       setCleaningData(Array.isArray(cleanRes.data) ? cleanRes.data : cleanRes.data.data || []);
+//       setPackingData(Array.isArray(packRes.data) ? packRes.data : packRes.data.data || []);
+//       setOrdersData(Array.isArray(ordersRes.data) ? ordersRes.data : ordersRes.data.data || []);
+//     } catch (err) {
+//       console.error("Reports fetch error:", err);
+//       setError(err?.response?.data?.message || err.message || "Failed to fetch reports");
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [token]);
+
+//   useEffect(() => {
+//     fetchAll();
+//   }, [fetchAll]);
+
+//   return (
+//     <div className="reports-page">
+//       <header className="reports-header">
+//         <h1>Vatan Foods Analytics — Reports</h1>
+//         <div>
+//           <input type="date" value={startDate}/>
+//           <input type="date" value={endDate}/>
+//           <button className="btn" onClick={applyDateFilter}>Apply Date Filter</button>
+//         </div>
+//         <div className="reports-actions">
+//           <button className="btn" onClick={fetchAll} disabled={loading}>Refresh</button>
+//         </div>
+//       </header>
+
+//       {loading && <div className="reports-loading">Loading datasets...</div>}
+//       {error && <div className="reports-error">Error: {error}</div>}
+
+      
+
+//       <main className="reports-main">
+//         {/* Grid layout: all components render at once */}
+//         <section className="reports-section">
+//           <IncomingReports incomingData={incomingData} />
+//         </section>
+
+//         <section className="reports-section">
+//           <CleaningReports cleaningData={cleaningData} />
+//         </section>
+
+//         <section className="reports-section">
+//           <PackingReports packingData={packingData} />
+//         </section>
+
+//         <section className="reports-section">
+//           <OrdersReports ordersData={ordersData} />
+//         </section>
+//       </main>
+//     </div>
+//   );
+// };
+
+// export default Reports;
+
+
+
 
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-
-import "./Reports.css";
 import IncomingReports from "../IncomingCharts/IncomingReports";
 import CleaningReports from "../CleaningReports/CleaningReports";
 import PackingReports from "../PackingReports/PackingReports";
 import OrdersReports from "../OrdersReports/OrdersReports";
 
-// Register ChartJS globally once
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  ChartDataLabels
-);
-
-const API_BASE = "https://vatan-foods-backend-final.onrender.com/api"; // change if needed
+const API_BASE = "https://vatan-foods-backend-final.onrender.com/api";
 
 const Reports = () => {
   const [incomingData, setIncomingData] = useState([]);
@@ -288,71 +384,105 @@ const Reports = () => {
   const [packingData, setPackingData] = useState([]);
   const [ordersData, setOrdersData] = useState([]);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [startDate, setStartDate] = useState(
+    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+  );
+  const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 10));
 
   const token = localStorage.getItem("token") || "";
 
   const fetchAll = useCallback(async () => {
-    setLoading(true);
-    setError(null);
     try {
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
       const [incRes, cleanRes, packRes, ordersRes] = await Promise.all([
         axios.get(`${API_BASE}/incoming`, { headers }),
         axios.get(`${API_BASE}/cleaning`, { headers }),
         axios.get(`${API_BASE}/packing`, { headers }),
         axios.get(`${API_BASE}/orders`, { headers }),
       ]);
-      const totalIncoming = incomingData.reduce((sum, r) => sum + Number(r.totalQuantity || 0), 0);
-      const totalPacked = packingData.reduce((sum, r) => sum + Number(r.outputQuantity || r.totalPacked || 0), 0);
 
-      setIncomingData(Array.isArray(incRes.data) ? incRes.data : incRes.data.data || []);
-      setCleaningData(Array.isArray(cleanRes.data) ? cleanRes.data : cleanRes.data.data || []);
-      setPackingData(Array.isArray(packRes.data) ? packRes.data : packRes.data.data || []);
-      setOrdersData(Array.isArray(ordersRes.data) ? ordersRes.data : ordersRes.data.data || []);
+      setIncomingData(incRes.data?.data || incRes.data || []);
+      setCleaningData(cleanRes.data?.data || cleanRes.data || []);
+      setPackingData(packRes.data?.data || packRes.data || []);
+      setOrdersData(ordersRes.data?.data || ordersRes.data || []);
     } catch (err) {
-      console.error("Reports fetch error:", err);
-      setError(err?.response?.data?.message || err.message || "Failed to fetch reports");
-    } finally {
-      setLoading(false);
+      console.error(err);
     }
   }, [token]);
 
-  useEffect(() => {
-    fetchAll();
-  }, [fetchAll]);
+  useEffect(() => { fetchAll(); }, [fetchAll]);
+
+  // 🔥 Filter function (shared by all reports)
+  const filterByDateRange = (records) => {
+    return records.filter((r) => {
+      const d = new Date(r.timestamp || r.createdAt || r.updatedAt);
+      const s = new Date(startDate);
+      const e = new Date(endDate);
+      return d >= s && d <= e;
+    });
+  };
+
+  const incomingFiltered = filterByDateRange(incomingData);
+  const cleaningFiltered = filterByDateRange(cleaningData);
+  const packingFiltered = filterByDateRange(packingData);
+  const ordersFiltered = filterByDateRange(ordersData);
+
+  // 🔥 Predefined quick filters
+  const setPredefinedRange = (days) => {
+    const end = new Date();
+    const start = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+    setStartDate(start.toISOString().slice(0, 10));
+    setEndDate(end.toISOString().slice(0, 10));
+  };
 
   return (
     <div className="reports-page">
       <header className="reports-header">
         <h1>Vatan Foods Analytics — Reports</h1>
-        <div className="reports-actions">
-          <button className="btn" onClick={fetchAll} disabled={loading}>Refresh</button>
+
+        {/* DATE RANGE UI */}
+        <div>
+          <input
+            type="date"
+            max={new Date().toISOString().slice(0, 10)}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <input
+            type="date"
+            max={new Date().toISOString().slice(0, 10)}
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </div>
+
+        {/* QUICK FILTER BUTTONS */}
+        <div className="date-buttons">
+          <button onClick={() => setPredefinedRange(7)}>Last 7 Days</button>
+          <button onClick={() => setPredefinedRange(15)}>Last 15 Days</button>
+          <button onClick={() => setPredefinedRange(30)}>30 Days</button>
+          <button onClick={() => setPredefinedRange(180)}>6 Months</button>
+          <button onClick={() => setPredefinedRange(365)}>1 Year</button>
         </div>
       </header>
 
-      {loading && <div className="reports-loading">Loading datasets...</div>}
-      {error && <div className="reports-error">Error: {error}</div>}
-
-      
-
       <main className="reports-main">
-        {/* Grid layout: all components render at once */}
-        <section className="reports-section">
-          <IncomingReports incomingData={incomingData} />
+        <section>
+          <IncomingReports incomingData={incomingFiltered} />
         </section>
 
-        <section className="reports-section">
-          <CleaningReports cleaningData={cleaningData} />
+        <section>
+          <CleaningReports cleaningData={cleaningFiltered} />
         </section>
 
-        <section className="reports-section">
-          <PackingReports packingData={packingData} />
+        <section>
+          <PackingReports packingData={packingFiltered} />
         </section>
 
-        <section className="reports-section">
-          <OrdersReports ordersData={ordersData} />
+        <section>
+          <OrdersReports ordersData={ordersFiltered} />
         </section>
       </main>
     </div>

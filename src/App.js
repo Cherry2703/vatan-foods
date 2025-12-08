@@ -247,7 +247,7 @@ import TrackOrder from "./components/TrackOrder/TrackOrder";
 import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
 import NotFound from "./components/NotFound/NotFound";
-import Reports from "./components/Reports/Reports";
+// import Reports from "./components/Reports/Reports";
 
 function App() {
   const isLoggedIn = !!localStorage.getItem("user");
@@ -333,14 +333,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/reports"
           element={
             <ProtectedRoute isLoggedIn={isLoggedIn}>
               <Reports />
             </ProtectedRoute>
           }
-        />
+        /> */}
 
         {/* Catch-all: 404 Not Found */}
         <Route path="*" element={<NotFound />} />
