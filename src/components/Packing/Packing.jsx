@@ -742,7 +742,7 @@ export default function Packing() {
               <input name="outputPacked" placeholder="Output Packed" type="text" value={formData.outputPacked} onChange={handleChange} />
 
               <p style={{ marginTop: 6, fontSize: 13, color: "#444" }}>
-                <strong>Remaining after this packing:</strong> {selectedBatch.outputQuantity - formData.inputFromCleaning} kg
+                <strong>Remaining after this packing:</strong> {formData.inputFromCleaning - selectedBatch.outputQuantity} kg
               </p>
 
               <div>
