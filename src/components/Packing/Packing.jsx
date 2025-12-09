@@ -21,7 +21,7 @@ export default function Packing() {
 
   const initialForm = {
     batchId: "",
-    packingType: "Final Packaging",
+    packingType: "Manual Packing",
     shift: "",
     inputFromCleaning: 0,
     outputPacked: 0,
@@ -187,8 +187,12 @@ export default function Packing() {
 
     const payload = { ...formData, createdBy: user.uuid || "" };
 
+    
+
     try {
       // Create packing record
+      console.log("packing info",formData.packingType);
+
       const createRes = await axios.post(API_BASE, payload, { headers: { Authorization: `Bearer ${token}` } });
 
       // Only update incoming if remaining > 0 and incoming record exists
