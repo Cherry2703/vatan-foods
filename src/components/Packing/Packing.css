@@ -46,6 +46,7 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+  height: 60%;
 }
 
 table {
@@ -63,6 +64,8 @@ th, td {
 th {
   background: #f1f5f9;
   font-weight: 600;
+  /* position: sticky;
+  z-index: 10; */
 }
 
 tr:nth-child(even) {

@@ -205,3 +205,44 @@
 
 /* muted small */
 .small-note { font-size:0.85rem; color:#64748b; }
+
+
+.upcoming-card {
+  margin-top: 20px;
+  padding: 16px;
+}
+
+.upcoming-lists {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.upcoming-section {
+  flex: 1;
+  min-width: 320px;
+}
+
+.upcoming-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 8px 0;
+  background: #f8f8f8;
+  border: 1px solid #e5e5e5;
+}
+
+.due-tag {
+  background: #d7effe;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.due-tag.urgent {
+  background: #ffd7d7;
+  color: #b40000;
+}

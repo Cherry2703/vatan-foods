@@ -476,8 +476,8 @@ export default function Packing() {
               <th>Shift</th>
               <th>Output</th>
               <th>Bag Weight</th>
-              <th>No of Bags</th>
-              <th>Packets per Bag</th>
+              {/* <th>No of Bags</th>
+              <th>Packets per Bag</th> */}
               <th>Status</th>
               <th>Wastage</th>
               <th>Actions</th>
@@ -492,8 +492,8 @@ export default function Packing() {
                 <td>{r.shift}</td>
                 <td>{r.outputPacked}</td>
                 <td>{r.bagWeight}</td>
-                <td>{r.numberOfBags}</td>
-                <td>{r.packetsInEachBag}</td>
+                {/* <td>{r.numberOfBags}</td>
+                <td>{r.packetsInEachBag}</td> */}
                 <td>{r.status}</td>
                 <td>{r.wastage}</td>
                 <td>
