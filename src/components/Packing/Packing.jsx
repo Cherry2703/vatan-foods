@@ -466,45 +466,55 @@ export default function Packing() {
       )}
 
       {/* Table */}
-      <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Batch ID</th>
-              <th>Invoice Number</th>
-              <th>Packing Type</th>
-              <th>Shift</th>
-              <th>Output</th>
-              <th>Bag Weight</th>
-              {/* <th>No of Bags</th>
-              <th>Packets per Bag</th> */}
-              <th>Status</th>
-              <th>Wastage</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {records.map((r) => (
-              <tr key={r.packingId}>
-                <td>{r.batchId}</td>
-                <td>{r.invoiceNumber || "-"}</td>
-                <td>{r.packingType}</td>
-                <td>{r.shift}</td>
-                <td>{r.outputPacked}</td>
-                <td>{r.bagWeight}</td>
-                {/* <td>{r.numberOfBags}</td>
-                <td>{r.packetsInEachBag}</td> */}
-                <td>{r.status}</td>
-                <td>{r.wastage}</td>
-                <td>
-                  <button onClick={() => handleEditClick(r)}>✏️</button>
-                  <button onClick={() => handleDelete(r.packingId)}>🗑️</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+<div className="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Batch ID</th>
+        <th>Invoice Number</th>
+        <th>Packing Type</th>
+        <th>Shift</th>
+        <th>Output</th>
+        <th>Bag Weight</th>
+        <th>Status</th>
+        <th>Wastage</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {records
+        .filter((r) => {
+          // If status is not Completed → always show
+          if (r.status !== "Completed") return true;
+
+          // If Completed, check updatedAt or createdAt
+          const recordDate = new Date(r.updatedAt || r.createdAt);
+          const sevenDaysAgo = new Date();
+          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+          // Show only if Completed within last 7 days
+          return recordDate >= sevenDaysAgo;
+        })
+        .map((r) => (
+          <tr key={r.packingId}>
+            <td>{r.batchId}</td>
+            <td>{r.invoiceNumber || "-"}</td>
+            <td>{r.packingType}</td>
+            <td>{r.shift}</td>
+            <td>{r.outputPacked}</td>
+            <td>{r.bagWeight}</td>
+            <td>{r.status}</td>
+            <td>{r.wastage}</td>
+            <td>
+              <button onClick={() => handleEditClick(r)}>✏️</button>
+              <button onClick={() => handleDelete(r.packingId)}>🗑️</button>
+            </td>
+          </tr>
+        ))}
+    </tbody>
+  </table>
+</div>
+
     </div>
   );
 }
