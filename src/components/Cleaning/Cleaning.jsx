@@ -379,7 +379,7 @@ const closeHistory = () => setShowHistoryFor(null);
         <FaSearch className="search-icon" />
         <input
           type="text"
-          placeholder="Search by item name or batch..."
+          placeholder="Search by item name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
