@@ -24,6 +24,7 @@ const Navbar = () => {
 
   const navItems = [
     { label: "Dashboard", link: "/dashboard" },
+    {label: "Employees", link: "/employees"},
     { label: "Track Order", link: "/track-order" },
     { label: "Orders", link: "/orders" },
     { label: "Raw Materials", link: "/raw-materials" },

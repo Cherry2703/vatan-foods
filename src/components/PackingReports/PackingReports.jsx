@@ -98,9 +98,9 @@ const PackingReports = ({ packingData = [] }) => {
           <Pie data={statusData} options={{plugins:{title:{display:true,text:"Packing Status Distribution"}}, maintainAspectRatio:false}} />
         </div>
 
-        <div style={{gridColumn:"1 / -1", minHeight:220}}>
+        {/* <div style={{gridColumn:"1 / -1", minHeight:220}}>
           <Line data={trendData} options={{plugins:{title:{display:true,text:"Packing Trend (by date)"}}, maintainAspectRatio:false}} />
-        </div>
+        </div> */}
 
         <div>
           <Pie data={typeData} options={{plugins:{title:{display:true,text:"Packing Type Distribution"}}, maintainAspectRatio:false}} />

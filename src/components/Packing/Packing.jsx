@@ -475,7 +475,7 @@ export default function Packing() {
         <th>Packing Type</th>
         <th>Shift</th>
         <th>Output</th>
-        <th>Bag Weight</th>
+        <th>Each Bag Weight</th>
         <th>Status</th>
         <th>Wastage</th>
         <th>Actions</th>

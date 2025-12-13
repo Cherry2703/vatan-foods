@@ -176,13 +176,13 @@ const CleaningReports = ({ cleaningData = [] }) => {
           <Pie data={typePie} options={{plugins:{title:{display:true,text:"Cleaning Type Distribution"}}, maintainAspectRatio:false}} />
         </div>
 
-        <div style={{gridColumn:"1 / -1", minHeight:220}}>
+        {/* <div style={{gridColumn:"1 / -1", minHeight:220}}>
           <Line data={wastageTrendData} options={{plugins:{title:{display:true,text:"Wastage Trend (by date)"}}, maintainAspectRatio:false}} />
-        </div>
+        </div> */}
 
-        <div>
+        {/* <div>
           <Bar data={efficiencyData} options={{plugins:{title:{display:true,text:"Efficiency % by Item"}, datalabels:{anchor:"end",align:"end"}}, maintainAspectRatio:false}} />
-        </div>
+        </div> */}
 
         <div>
           <Pie data={shiftPie} options={{plugins:{title:{display:true,text:"Shift Distribution"}}, maintainAspectRatio:false}} />
@@ -190,7 +190,7 @@ const CleaningReports = ({ cleaningData = [] }) => {
 
       </div>
 
-      <div style={{marginTop:10, display:"flex", gap:10, flexWrap:"wrap"}}>
+      {/* <div style={{marginTop:10, display:"flex", gap:10, flexWrap:"wrap"}}>
         <div style={{flex:1}}>
           <h4 style={{margin:"6px 0"}}>Top Operators</h4>
           <ol className="small-list">
@@ -204,7 +204,7 @@ const CleaningReports = ({ cleaningData = [] }) => {
             {remainingByItem.slice(0,6).map(r => <li key={r.item}><span>{r.item}</span><span className="small-muted">{r.total}</span></li>)}
           </ol>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

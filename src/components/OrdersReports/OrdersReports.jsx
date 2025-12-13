@@ -1,11 +1,7 @@
 import React, { useMemo } from "react";
 import { Bar, Line, Pie } from "react-chartjs-2";
 
-/**
- * OrdersReports
- * Props:
- *  - ordersData: array of order documents (see your model)
- */
+
 const palette = ["#a2d5f2","#ffd6a5","#c1fba4","#ffb3c1","#d3c0f9","#f5c0c0"];
 
 const ensureColor = (i) => palette[i % palette.length];
@@ -96,15 +92,15 @@ const OrdersReports = ({ ordersData = [] }) => {
       </div>
 
       <div className="charts-grid" style={{marginTop:8}}>
-        <div style={{minHeight:200}}>
+        {/* <div style={{minHeight:200}}>
           <Line data={ordersTrend} options={{plugins:{title:{display:true,text:"Orders Trend (by date)"}}, maintainAspectRatio:false}} />
-        </div>
+        </div> */}
 
         <div style={{minHeight:200}}>
           <Pie data={statusData} options={{plugins:{title:{display:true,text:"Order Status Distribution"}}, maintainAspectRatio:false}} />
         </div>
 
-        <div style={{gridColumn:"1 / -1", minHeight:220}}>
+        {/* <div style={{gridColumn:"1 / -1", minHeight:220}}>
           <Line data={revenueData} options={{plugins:{title:{display:true,text:"Revenue Trend"}}, maintainAspectRatio:false}} />
         </div>
 
@@ -114,10 +110,19 @@ const OrdersReports = ({ ordersData = [] }) => {
 
         <div>
           <Bar data={topItemsData} options={{plugins:{title:{display:true,text:"Top Items Ordered"}}, maintainAspectRatio:false}} />
-        </div>
+        </div> */}
       </div>
     </div>
   );
 };
 
 export default OrdersReports;
+
+
+
+
+
+
+
+
+
