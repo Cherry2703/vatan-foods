@@ -472,10 +472,15 @@ export default function Packing() {
       <tr>
         <th>Batch ID</th>
         <th>Invoice Number</th>
+        <th>Item Name</th>
+        <th>Brand Name</th>
         <th>Packing Type</th>
         <th>Shift</th>
         <th>Output</th>
+        <th>No Of Packs</th>
         <th>Each Bag Weight</th>
+        <th>Total Boxes Used for Packing</th>
+        <th>Each Box containes no of packs</th>
         <th>Status</th>
         <th>Wastage</th>
         <th>Actions</th>
@@ -499,10 +504,15 @@ export default function Packing() {
           <tr key={r.packingId}>
             <td>{r.batchId}</td>
             <td>{r.invoiceNumber || "-"}</td>
+            <td>{r.itemName}</td>
+            <td>{r.brandName}</td>
             <td>{r.packingType}</td>
             <td>{r.shift}</td>
             <td>{r.outputPacked}</td>
+            <td>{r.noOfPackets}</td>
             <td>{r.bagWeight}</td>
+            <td>{r.numberOfBags}</td>
+            <td>{r.packetsInEachBag}</td>
             <td>{r.status}</td>
             <td>{r.wastage}</td>
             <td>
