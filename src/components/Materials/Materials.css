@@ -118,10 +118,32 @@
   padding: 8px;
   font-size: 0.95rem;
   color: #1e293b;
+  width: 30vw;
+}
+.select-search {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px;
+  font-size: 0.9rem;
+  background-color: #f1f5f9;
+  color: #1e293b;
+  margin-right: 10px;
+  transition: all 0.25s ease;
+  width: fit-content;
+}
+.search-input-cont{
+  display: flex;
+  align-items: center;
+  border: 1px solid #0f172a;
+  border-radius: 8px;
+  
+
+  /* gap: 8px; */
 }
 
 .search-icon {
   color: #64748b;
+  margin-left: 8px;
   margin-right: 8px;
 }
 
