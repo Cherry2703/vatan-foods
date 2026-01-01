@@ -30,6 +30,7 @@ export default function Packing() {
     wastage: 0,
     workers: "",
     status: "Pending",
+    packedDate: "",
     remarks: "",
     vendorName: "",
     brandName: "",
@@ -311,6 +312,7 @@ export default function Packing() {
       noOfPackets: r.noOfPackets || 0,
       packetsInEachBag: r.packetsInEachBag || 0,
       invoiceNumber: r.invoiceNumber || "",
+      packedDate: r.packedDate || "",
     });
     setEditMode(true);
     setShowDialog(true);
@@ -443,6 +445,10 @@ export default function Packing() {
               <input name="packetsInEachBag" placeholder="No of Packets In Each Box" type="text" value={formData.packetsInEachBag} onChange={handleChange} />
               </div>
               <div>
+              <label>Packed Date</label>
+              <input name="packedDate" placeholder="Packed Date" type="date" value={formData.packedDate} onChange={handleChange} />
+              </div>
+              <div>
               <label>Workers</label>
               <input name="workers" value={formData.workers} onChange={handleChange} placeholder="Comma separated" />
               </div>
@@ -483,6 +489,7 @@ export default function Packing() {
         <th>Each Box containes no of packs</th>
         <th>Status</th>
         <th>Wastage</th>
+        <th>Packed Date</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -515,6 +522,19 @@ export default function Packing() {
             <td>{r.packetsInEachBag}</td>
             <td>{r.status}</td>
             <td>{r.wastage}</td>
+            {/* <td>{r.packedDate || "-"}</td> */}
+     <td>
+  {r.packedDate
+    ? new Date(r.packedDate).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : "-"}
+</td>
+
+
+
             <td>
               <button onClick={() => handleEditClick(r)}>✏️</button>
               <button onClick={() => handleDelete(r.packingId)}>🗑️</button>

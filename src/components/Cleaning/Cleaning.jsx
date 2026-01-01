@@ -247,16 +247,6 @@ const handleChange = (e) => {
     if (!formData.batchId || !formData.itemName || !formData.inputQuantity)
       return alert("Please fill required fields.");
 
-    // const payload = {
-    //   ...formData,
-    //   inputQuantity: formatNumber(formData.inputQuantity),
-    //   outputQuantity: formatNumber(formData.outputQuantity),
-    //   wastageQuantity: formatNumber(formData.wastageQuantity),
-    //   usedQuantity: formatNumber(formData.usedQuantity),
-    //   remainingAfterCleaning: formatNumber(formData.remainingAfterCleaning),
-    //   coverWastage: formatNumber(formData.coverWastage),
-    //   createdBy: user.uuid,
-    // };
 
     const payload = {
   ...formData,
@@ -292,17 +282,6 @@ const handleChange = (e) => {
     if (!selected) return;
 
     const oldUsedQty = selected.usedQuantity || 0;
-
-    // const payload = {
-    //   ...formData,
-    //   inputQuantity: formatNumber(formData.inputQuantity),
-    //   outputQuantity: formatNumber(formData.outputQuantity),
-    //   wastageQuantity: formatNumber(formData.wastageQuantity),
-    //   usedQuantity: formatNumber(formData.usedQuantity),
-    //   remainingAfterCleaning: formatNumber(formData.remainingAfterCleaning),
-    //   coverWastage: formatNumber(formData.coverWastage),
-    //   createdBy: user.uuid,
-    // };
 
     const payload = {
   ...formData,
