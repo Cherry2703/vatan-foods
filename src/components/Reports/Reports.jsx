@@ -249,9 +249,7 @@
 
 
 
-
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./Reports.css";
 
@@ -273,7 +271,7 @@ export default function Reports() {
 
   const token = localStorage.getItem("token");
 
-  // ================= API CALL =================
+  // ================= API =================
   const fetchReports = async () => {
     try {
       setLoading(true);
@@ -290,12 +288,11 @@ export default function Reports() {
     }
   };
 
-  // ================= DEFAULT LOAD (1 MONTH) =================
   useEffect(() => {
     fetchReports();
   }, []);
 
-  // ================= RANGE HANDLER =================
+  // ================= RANGE =================
   const handleRangeChange = (value) => {
     setRange(value);
     if (value === "7d") setStartDate(subtractDays(7));
@@ -311,12 +308,62 @@ export default function Reports() {
   const packing = data?.operationsSummary?.packing || {};
   const orders = data?.orders || {};
 
-  // ================= LOADING SPINNER =================
+  // ================= MERGED VENDOR PERFORMANCE =================
+  const vendorPerformance = useMemo(() => {
+    const map = {};
+
+    data?.vendorAnalytics?.purchaseVendors?.forEach((v) => {
+      const key = v.vendorName?.toLowerCase();
+      map[key] = {
+        vendorName: v.vendorName,
+        suppliedKg: v.totalPurchasedKg || 0,
+        soldKg: 0,
+        salePercent: "-",
+      };
+    });
+
+    data?.vendorAnalytics?.saleVendors?.forEach((v) => {
+      const key = v.saleVendorName?.toLowerCase();
+      if (!map[key]) {
+        map[key] = {
+          vendorName: v.saleVendorName,
+          suppliedKg: 0,
+          soldKg: v.totalSoldKg || 0,
+          salePercent: v.saleContributionPercent || "0",
+        };
+      } else {
+        map[key].soldKg = v.totalSoldKg || 0;
+        map[key].salePercent = v.saleContributionPercent || "0";
+      }
+    });
+
+    return Object.values(map);
+  }, [data]);
+
+  const topSupplier = useMemo(
+    () =>
+      vendorPerformance.reduce(
+        (max, v) => (v.suppliedKg > (max?.suppliedKg || 0) ? v : max),
+        null
+      ),
+    [vendorPerformance]
+  );
+
+  const topSeller = useMemo(
+    () =>
+      vendorPerformance.reduce(
+        (max, v) => (v.soldKg > (max?.soldKg || 0) ? v : max),
+        null
+      ),
+    [vendorPerformance]
+  );
+
+  // ================= LOADER =================
   if (loading) {
     return (
       <div className="loader-screen">
         <div className="spinner" />
-        <p>Loading, please wait…</p>
+        <p>Loading reports…</p>
       </div>
     );
   }
@@ -332,7 +379,6 @@ export default function Reports() {
           <option value="15d">Last 15 Days</option>
           <option value="1m">Last 1 Month</option>
           <option value="6m">Last 6 Months</option>
-          <option value="custom">Custom</option>
         </select>
 
         <input type="date" value={startDate} max={todayISO()}
@@ -342,48 +388,84 @@ export default function Reports() {
           onChange={(e) => { setRange("custom"); setEndDate(e.target.value); }} />
 
         <button onClick={fetchReports}>Apply</button>
-        <button className="secondary" onClick={fetchReports}>Refresh</button>
       </div>
 
-      {/* ================= 4 SUMMARY CONTAINERS ================= */}
+      {/* ================= SUMMARY ================= */}
       <div className="summary-grid">
+        <SummaryCard title="Incoming" items={[
+          ["Records", incoming.totalRecords],
+          ["Vendors", incoming.vendorsInvolved],
+          ["Total Kg", incoming.totalIncomingKg]
+        ]} />
 
-        {/* Incoming */}
-        <div className="summary-card">
-          <h4>Incoming</h4>
-          <p>Total Records: <b>{incoming.totalRecords || 0}</b></p>
-          <p>Vendors: <b>{incoming.vendorsInvolved || 0}</b></p>
-          <p>Total Kg: <b>{incoming.totalIncomingKg || 0}</b></p>
-        </div>
+        <SummaryCard title="Cleaning" items={[
+          ["Records", cleaning.totalRecords],
+          ["Cleaned Kg", cleaning.totalCleanedKg],
+          ["Wastage Kg", cleaning.totalWastageKg]
+        ]} />
 
-        {/* Cleaning */}
-        <div className="summary-card">
-          <h4>Cleaning</h4>
-          <p>Total Records: <b>{cleaning.totalRecords || 0}</b></p>
-          <p>Cleaned Kg: <b>{cleaning.totalCleanedKg || 0}</b></p>
-          <p>Wastage Kg: <b>{cleaning.totalWastageKg || 0}</b></p>
-        </div>
+        <SummaryCard title="Packing" items={[
+          ["Records", packing.totalRecords],
+          ["Completed", packing.statusBreakdown?.completed],
+          ["Packed Kg", packing.totals?.packedKg]
+        ]} />
 
-        {/* Packing */}
-        <div className="summary-card">
-          <h4>Packing</h4>
-          <p>Total Records: <b>{packing.totalRecords || 0}</b></p>
-          <p>Completed: <b>{packing.statusBreakdown?.completed || 0}</b></p>
-          <p>Packed Kg: <b>{packing.totals?.packedKg || 0}</b></p>
-          <p>Wastage Kg: <b>{packing.totals?.wastageKg || 0}</b></p>
-        </div>
-
-        {/* Orders */}
-        <div className="summary-card">
-          <h4>Orders</h4>
-          <p>Total Orders: <b>{orders.totalOrders || 0}</b></p>
-          <p>Delivered: <b>{orders.statusBreakdown?.delivered || 0}</b></p>
-          <p>Pending: <b>{orders.statusBreakdown?.pending || 0}</b></p>
-        </div>
-
+        <SummaryCard title="Orders" items={[
+          ["Total", orders.totalOrders],
+          ["Delivered", orders.statusBreakdown?.delivered],
+          ["Pending", orders.statusBreakdown?.pending]
+        ]} />
       </div>
 
-      {/* ================= BATCH TABLE ================= */}
+      {/* ================= MONTHLY HIGHLIGHTS ================= */}
+      <h3>⭐ Monthly Highlights</h3>
+      <div className="summary-grid">
+        <SummaryCard title="Top Supplier" highlight
+          items={[
+            ["Vendor", topSupplier?.vendorName || "-"],
+            ["Supplied Kg", topSupplier?.suppliedKg || 0]
+          ]}
+        />
+        <SummaryCard title="Top Seller" highlight
+          items={[
+            ["Vendor", topSeller?.vendorName || "-"],
+            ["Sold Kg", topSeller?.soldKg || 0],
+            ["Contribution", `${topSeller?.salePercent || 0}%`]
+          ]}
+        />
+      </div>
+
+      {/* ================= MERGED VENDOR TABLE ================= */}
+      <h3>📅 Monthly Vendor Performance</h3>
+      <div className="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Vendor</th>
+              <th>Supplied Kg</th>
+              <th>Sold Kg</th>
+              <th>Sale %</th>
+              <th>Highlight</th>
+            </tr>
+          </thead>
+          <tbody>
+            {vendorPerformance.map((v) => (
+              <tr key={v.vendorName}>
+                <td>{v.vendorName}</td>
+                <td>{v.suppliedKg}</td>
+                <td>{v.soldKg}</td>
+                <td>{v.salePercent}%</td>
+                <td>
+                  {topSupplier?.vendorName === v.vendorName && "🏆 Top Supplier"}
+                  {topSeller?.vendorName === v.vendorName && " 🏆 Top Seller"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* ================= BATCH TABLE (UNCHANGED) ================= */}
       <h3>Batch Wise Performance</h3>
       <div className="table-wrapper">
         <table>
@@ -411,31 +493,18 @@ export default function Reports() {
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
 
-
-
-      {/* ================= VENDORS ================= */}
-      <h3>Sale Vendors</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Vendor</th>
-            <th>Sold Kg</th>
-            <th>Contribution %</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.vendorAnalytics?.saleVendors?.map((v, i) => (
-            <tr key={i}>
-              <td>{v.saleVendorName}</td>
-              <td>{v.totalSoldKg}</td>
-              <td>{v.saleContributionPercent}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    
-
+// ================= SMALL COMPONENT =================
+function SummaryCard({ title, items, highlight }) {
+  return (
+    <div className={`summary-card ${highlight ? "highlight" : ""}`}>
+      <h4>{title}</h4>
+      {items.map(([k, v]) => (
+        <p key={k}>{k}: <b>{v ?? 0}</b></p>
+      ))}
     </div>
   );
 }

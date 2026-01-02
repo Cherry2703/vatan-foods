@@ -37,6 +37,7 @@ export default function Packing() {
     itemName: "",
     noOfPackets: 0,
     packetsInEachBag: 0,
+    cleaningId: "",
   };
 
   const [formData, setFormData] = useState(initialForm);
@@ -130,40 +131,78 @@ export default function Packing() {
   };
 
   // ---------- When batch is selected ----------
+  // useEffect(() => {
+  //   if (!formData.batchId) {
+  //     setSelectedBatch(null);
+  //     setSelectedIncoming(null);
+  //     setBatchCleanedQty(0);
+  //     setRemainingQty(0);
+  //     return;
+  //   }
+
+  //   const b = batchList.find((x) => x.batchId === formData.batchId);
+  //   setSelectedBatch(b || null);
+
+  //   // cleaned qty from cleaning record (outputQuantity)
+  //   const cleanedQty = b ? formatNumber(b.outputQuantity) : 0;
+  //   setBatchCleanedQty(cleanedQty);
+
+  //   // find matching incoming entry by batchId (incoming items list)
+  //   const inc = incomingList.find((it) => it.batchId === formData.batchId);
+  //   setSelectedIncoming(inc || null);
+
+  //   // set initial item name and default packed/input values if editing not happening
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     itemName: b?.itemName || prev.itemName,
+  //     inputFromCleaning: b ? cleanedQty : prev.inputFromCleaning,
+  //     outputPacked: b ? Math.min(prev.outputPacked || cleanedQty, cleanedQty) : prev.outputPacked,
+  //   }));
+
+  //   // recalc remaining based on current outputPacked
+  //   const currentPacked = formatNumber(formData.outputPacked) || 0;
+  //   const rem = cleanedQty - currentPacked;
+  //   setRemainingQty(rem >= 0 ? rem : 0);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [formData.batchId, batchList, incomingList]);
+
+
+
+
   useEffect(() => {
-    if (!formData.batchId) {
-      setSelectedBatch(null);
-      setSelectedIncoming(null);
-      setBatchCleanedQty(0);
-      setRemainingQty(0);
-      return;
-    }
+  if (!formData.cleaningId) {
+    setSelectedBatch(null);
+    setSelectedIncoming(null);
+    setBatchCleanedQty(0);
+    setRemainingQty(0);
+    return;
+  }
 
-    const b = batchList.find((x) => x.batchId === formData.batchId);
-    setSelectedBatch(b || null);
+  const b = batchList.find(
+    (x) => x.cleaningId === formData.cleaningId
+  );
 
-    // cleaned qty from cleaning record (outputQuantity)
-    const cleanedQty = b ? formatNumber(b.outputQuantity) : 0;
-    setBatchCleanedQty(cleanedQty);
+  setSelectedBatch(b || null);
 
-    // find matching incoming entry by batchId (incoming items list)
-    const inc = incomingList.find((it) => it.batchId === formData.batchId);
-    setSelectedIncoming(inc || null);
+  const cleanedQty = b ? formatNumber(b.outputQuantity) : 0;
+  setBatchCleanedQty(cleanedQty);
 
-    // set initial item name and default packed/input values if editing not happening
-    setFormData((prev) => ({
-      ...prev,
-      itemName: b?.itemName || prev.itemName,
-      inputFromCleaning: b ? cleanedQty : prev.inputFromCleaning,
-      outputPacked: b ? Math.min(prev.outputPacked || cleanedQty, cleanedQty) : prev.outputPacked,
-    }));
+  const inc = incomingList.find(
+    (it) => it.batchId === b?.batchId
+  );
+  setSelectedIncoming(inc || null);
 
-    // recalc remaining based on current outputPacked
-    const currentPacked = formatNumber(formData.outputPacked) || 0;
-    const rem = cleanedQty - currentPacked;
-    setRemainingQty(rem >= 0 ? rem : 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData.batchId, batchList, incomingList]);
+  setFormData((prev) => ({
+    ...prev,
+    itemName: b?.itemName || prev.itemName,
+    inputFromCleaning: cleanedQty,
+    outputPacked: Math.min(prev.outputPacked || cleanedQty, cleanedQty),
+  }));
+
+  setRemainingQty(cleanedQty - formatNumber(formData.outputPacked || 0));
+}, [formData.cleaningId, batchList, incomingList]);
+
+
 
   // Recalculate wastage automatically (based on inputFromCleaning + inputFromRaw if present)
   useEffect(() => {
@@ -313,12 +352,17 @@ export default function Packing() {
       packetsInEachBag: r.packetsInEachBag || 0,
       invoiceNumber: r.invoiceNumber || "",
       packedDate: r.packedDate || "",
+      cleaningId: r.cleaningId || "",
     });
     setEditMode(true);
     setShowDialog(true);
 
     // set batch context so validation and remaining calc works
-    const b = batchList.find((x) => x.batchId === r.batchId);
+    // const b = batchList.find((x) => x.batchId === r.batchId);
+    const b = batchList.find(
+  (x) => x.cleaningId === r.cleaningId
+);
+
     setSelectedBatch(b || null);
     const cleanedQty = b ? formatNumber(b.outputQuantity) : 0;
     setBatchCleanedQty(cleanedQty);
@@ -361,7 +405,7 @@ export default function Packing() {
             <div className="form-grid">
               <div className="section-title">Batch Details</div>
               <label>Batch ID</label>
-              <select
+              {/* <select
                 value={formData.batchId}
                 onChange={(e) => {
                   const id = e.target.value;
@@ -374,7 +418,31 @@ export default function Packing() {
                     {b.batchId} - {b.itemName} - {b.outputQuantity} kg
                   </option>
                 ))}
-              </select>
+              </select> */}
+
+
+              <select
+  value={formData.cleaningId}
+  onChange={(e) => {
+    const cleaningId = e.target.value;
+    const selected = batchList.find(b => b.cleaningId === cleaningId);
+
+    setFormData({
+      ...formData,
+      cleaningId,
+      batchId: selected?.batchId || "",
+    });
+  }}
+>
+  <option value="">Select Batch</option>
+
+  {batchList.map((b) => (
+    <option key={b.cleaningId} value={b.cleaningId}>
+      {b.batchId} | {b.outputQuantity} kg | {b.cleanedOn?.slice(0,10)}
+    </option>
+  ))}
+</select>
+
 
               {selectedBatch && (
                 <p className="batch-info">
