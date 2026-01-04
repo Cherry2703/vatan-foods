@@ -452,13 +452,14 @@ const closeHistory = () => setShowHistoryFor(null);
                   <input name="inputQuantity" placeholder="Input Quantity for Cleaning..." value={formData.inputQuantity} onChange={handleChange} />
                 </div>
                 <div className="form-field">
-                  <label>Output Quantity</label>
-                  <input name="outputQuantity" placeholder="Output Quantity" value={formData.outputQuantity} onChange={handleChange} />
-                </div>
-                <div className="form-field">
                   <label>Wastage Quantity</label>
                   <input name="wastageQuantity" placeholder="Wastage Quantity" value={formData.wastageQuantity} onChange={handleChange} />
                 </div>
+                <div className="form-field">
+                  <label>Output Quantity</label>
+                  <input name="outputQuantity" placeholder="Output Quantity" value={formData.inputQuantity - formData.wastageQuantity} onChange={handleChange} />
+                </div>
+                
                 <div className="form-field">
                   <label>Total Used Quantity</label>
                   {/* <input name="usedQuantity" placeholder="Total Quantity used for cleaning" value={formData.inputQuantity} onChange={handleChange} /> */}
