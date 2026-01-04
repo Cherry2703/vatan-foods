@@ -438,10 +438,11 @@ export default function Packing() {
 
   {batchList.map((b) => (
     <option key={b.cleaningId} value={b.cleaningId}>
-      {b.batchId} | {b.outputQuantity} kg | {b.cleanedOn?.slice(0,10)}
+      {b.batchId} | {b.outputQuantity} kg  | {b.itemName} 
     </option>
   ))}
 </select>
+{/* | {b.cleanedOn?.slice(0,10)} */}
 
 
               {selectedBatch && (
@@ -552,9 +553,9 @@ export default function Packing() {
         <th>Shift</th>
         <th>Output</th>
         <th>No Of Packs</th>
-        <th>Each Bag Weight</th>
-        <th>Total Boxes Used for Packing</th>
-        <th>Each Box containes no of packs</th>
+        <th>Each Packet Weight</th>
+        <th>Total Bags</th>
+        <th>Each Bag containes no of packs</th>
         <th>Status</th>
         <th>Wastage</th>
         <th>Packed Date</th>
