@@ -180,7 +180,7 @@ export default function Employees() {
               onClick={() => setSelected(emp)}
             >
               <div className="avatar">{emp.name?.charAt(0).toUpperCase()}</div>
-              <h3>{emp.name}</h3>
+              <h3 className="emp-name">{emp.name}</h3>
               <p className="designation">{emp.designation || "Employee"}</p>
               <span className={`role ${emp.role.toLowerCase()}`}>
                 {emp.role.toUpperCase()}

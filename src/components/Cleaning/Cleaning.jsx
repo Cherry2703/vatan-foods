@@ -262,7 +262,6 @@ const handleChange = (e) => {
 };
 
 
-    console.log(payload);
     
 
     try {

@@ -9,28 +9,12 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
-  // const location = useLocation();
-  // const from = location.state?.from?.pathname || "/dashboard"; // fallback to dashboard
-
-  // // Redirect if already logged in
-  // const checkUserLoggedInOrNot = () => {
-  //   const user = localStorage.getItem("user");
-  //   if (user) {
-  //     navigate("/dashboard", { replace: true });
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   checkUserLoggedInOrNot();
-  // }, []);
-
-    
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
-    console.log("login called",email, password);
     
 
     if (!email || !password) {
@@ -45,10 +29,8 @@ const Login = () => {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      console.log(data);
       
 
-      // Save user + token in localStorage
       localStorage.setItem(
         "user",
         JSON.stringify({

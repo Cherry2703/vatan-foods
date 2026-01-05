@@ -164,3 +164,10 @@
     font-size: 1.8rem;
   }
 }
+
+.emp-name{
+  margin: 10px 0 5px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+}

@@ -162,10 +162,22 @@ const TrackOrder = () => {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.get(
-        `https://vatan-foods-backend-final.onrender.com/api/track-orders/${batchId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      // const res = await axios.get(
+      //   `https://vatan-foods-backend-final.onrender.com/api/track-orders/${batchId}`,
+      //   { headers: { Authorization: `Bearer ${token}` } }
+      // );
+      // console.log("track : ", res.data);
+      
+
+
+       const res = await axios.get(
+    "https://vatan-foods-backend-final.onrender.com/api/track-orders",
+    {
+      params: { batchId }, // ✅ query parameter
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
       setData(res.data);
       setFilteredData(res.data); // initially show all
     } catch (err) {

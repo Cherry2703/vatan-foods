@@ -118,6 +118,9 @@ h3 {
   border-radius: 12px;
   background: #ffffff;
   box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 table {

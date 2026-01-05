@@ -130,7 +130,7 @@
   position: absolute;
   top: 40px;
   right: 0;
-  background: var(--bg);
+  background: #f5c68d;
   padding: 15px;
   border-radius: 14px;
   box-shadow: 6px 6px 12px var(--shadow-dark),
@@ -141,12 +141,13 @@
   position: absolute;
   bottom: 60px;
   right: 20px;
-  background: var(--bg);
+  background:#f5c68d;
   padding: 15px;
   border-radius: 14px;
   box-shadow: 6px 6px 12px var(--shadow-dark),
               -6px -6px 12px var(--shadow-light);
   z-index: 100;
+
 }
 
 .profile-popup h4,
