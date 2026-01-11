@@ -72,6 +72,7 @@ export default function Packing() {
       setRecords(packRes.data || []);
 
       console.log("paking list : ", packRes.data);
+      console.log("cleaning list : ", cleanRes.data);
       
 
       // ✅ ONLY batches with remaining stock
@@ -241,7 +242,7 @@ export default function Packing() {
     if (!batch) return;
 
     // ✅ IMPORTANT CHANGE: use remainingAfterCleaning
-    const availableQty = formatNumber(batch.remainingAfterCleaning);
+    const availableQty = formatNumber(batch.outputQuantity);
 
     setFormData(prev => ({
       ...prev,
@@ -388,6 +389,7 @@ export default function Packing() {
         <th>Brand Name</th>
         <th>Packing Type</th>
         <th>Shift</th>
+        <th>Input Quantity</th>
         <th>Output</th>
         <th>Each Packet Weight</th>
         <th>Total Bags</th>
@@ -420,6 +422,7 @@ export default function Packing() {
             <td>{r.brandName || "-"}</td>
             <td>{r.packingType}</td>
             <td>{r.shift}</td>
+            <td>{r.inputFromCleaning}</td>
             <td>{r.outputPacked}</td>
             <td>{r.bagWeight}</td>
             <td>{r.numberOfBags}</td>
